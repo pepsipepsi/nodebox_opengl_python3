@@ -1,0 +1,7 @@
+fix type conversion in shader.py file
+
+fix maps needing to be converted to lists so len attribute can be calculated
+
+swap psyco compiler for something else so "render" method will work
+
+change lambda expressions in gui controls.py file to avoid tuple unpacking
