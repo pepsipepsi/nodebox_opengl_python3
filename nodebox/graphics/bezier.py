@@ -160,7 +160,7 @@ def _locate(path, t, segments=None):
     for i, el in enumerate(path):
         if i == 0 or el.cmd == MOVETO:
             closeto = Point(el.x, el.y)
-        if t <= segments[i] or i == len(segments)-1: 
+        if t <= segments[i] or i == len(segments)-1:
             break
         else: 
             t -= segments[i]

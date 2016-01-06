@@ -8,11 +8,15 @@
 04_text
 	all examples working
 05_path
-	none working
+	03-tangent
+	04-text
+	05-spider
+	06-handle
+	07-fit
 06_math
 	none working
 07_filter
-	none working
+	05-render
 08_physics
 	02_spring
 	04_animation

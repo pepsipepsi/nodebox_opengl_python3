@@ -4,7 +4,6 @@
 # License: BSD (see LICENSE.txt for details).
 # Copyright (c) 2008 City In A Bottle (cityinabottle.org)
 # http://cityinabottle.org/nodebox
-
 from math import sqrt, pow
 from math import sin, cos, atan2, degrees, radians, pi
 
@@ -557,8 +556,8 @@ def _tessellate_combine(coords, vertex_data, weights, dataOut):
     # Called when the tessellation detects an intersection.
     x, y, z = coords[0:3]
     data = (GLdouble * 3)(x, y, z)
-#jf following line throws type error when 05-path 01-curve is run "must be ctypes type"
-    dataOut[0] = cast(POINTER(data), POINTER(GLvoid))
+#jf following line throws type error when 05-path 01-curve is run "must be ctypes type" - comment it out?
+    #dataOut[0] = cast(POINTER(data), POINTER(GLvoid))
     _tessellate._combined.append(data)
     
 @_tessellate_callback(GLU_TESS_ERROR)

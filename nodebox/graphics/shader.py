@@ -4,6 +4,8 @@
 # License: BSD (see LICENSE.txt for details).
 # Copyright (c) 2008 City In A Bottle (cityinabottle.org)
 # http://cityinabottle.org/nodebox
+from _ctypes import byref
+from ctypes import c_uint
 
 from pyglet.gl         import *
 from pyglet.image      import Texture, SolidColorImagePattern
