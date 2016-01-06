@@ -3,8 +3,7 @@
 02_transform
 	all examples working
 03_image
-	03-filter
-	06-noise
+	all examples working
 04_text
 	all examples working
 05_path
