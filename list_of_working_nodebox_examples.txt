@@ -7,11 +7,8 @@
 04_text
 	all examples working
 05_path
-	03-tangent
 	04-text
 	05-spider
-	06-handle
-	07-fit
 06_math
 	none working
 07_filter
@@ -21,7 +18,7 @@
 	04_animation
 	07_graph
 09_layer
-	02-polygon
+	all examples working
 10_gui
 	none working
 11_sound

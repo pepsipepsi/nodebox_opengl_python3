@@ -981,7 +981,7 @@ class Node(object):
         self.text        = kwargs.get("text", True) and \
             Text(isinstance(id, bytes) and id or str(id).decode("utf-8", "ignore"),
                    width = 85,
-                    fill = kwargs.pop("text", (0,0,0,1)), 
+                    fill = kwargs.pop("text", (0,0,0,1)),
                 fontsize = kwargs.pop("fontsize", 11), **kwargs) or None
         self._weight     = None # Calculated by Graph.eigenvector_centrality().
         self._centrality = None # Calculated by Graph.betweenness_centrality().

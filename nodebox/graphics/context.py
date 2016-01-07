@@ -10,6 +10,9 @@
 
 # Debugging must be switched on or of before other modules are imported.
 import pyglet
+
+from graphics import geometry
+
 pyglet.options['debug_gl'] = False
 
 from pyglet.text.document import FormattedDocument
@@ -68,7 +71,8 @@ def precompiled(id):
 def flush(id):
     """ Removes the Display List program with the given id from memory.
     """
-    if id is not None:
+    print("the id of the list getting deleted is : ",id)
+    if id is not None :
         glDeleteLists(id, 1)
 
 #=====================================================================================================
@@ -1365,6 +1369,7 @@ def directed(points):
         This is useful if you want to have shapes following a path.
         To put text on a path, rotate the angle by +-90 to get the normal (i.e. perpendicular).
     """
+    angle = 0.0
     p = list(points)
     n = len(p)
     for i, pt in enumerate(p):
@@ -1372,28 +1377,28 @@ def directed(points):
             # For a point on a curve, the control handle gives the best direction.
             # For PathElement (fixed point in BezierPath), ctrl2 tells us how the curve arrives.
             # For DynamicPathElement (returnd from BezierPath.point()), ctrl1 tell how the curve arrives.
-            ctrl = isinstance(pt, graphics.DynamicPathElement) and pt.ctrl1 or pt.ctrl2
-            angle = angle(ctrl.x, ctrl.y, pt.x, pt.y)
+            ctrl = isinstance(pt, graphics.bezier.DynamicPathElement) and pt.ctrl1 or pt.ctrl2
+            angle = geometry.angle(ctrl.x, ctrl.y, pt.x, pt.y)
         elif 0 < i < n-1 and pt.__dict__.get("_cmd") == LINETO and p[i-1].__dict__.get("_cmd") == CURVETO:
             # For a point on a line preceded by a curve, look ahead gives better results.
-            angle = angle(pt.x, pt.y, p[i+1].x, p[i+1].y)
+            angle = geometry.angle(pt.x, pt.y, p[i+1].x, p[i+1].y)
         elif i == 0 and isinstance(points, BezierPath):
             # For the first point in a BezierPath, we can calculate a next point very close by.
             pt1 = points.point(0.001)
-            angle = angle(pt.x, pt.y, pt1.x, pt1.y)
+            angle = geometry.angle(pt.x, pt.y, pt1.x, pt1.y)
         elif i == n-1 and isinstance(points, BezierPath):
             # For the last point in a BezierPath, we can calculate a previous point very close by.
             pt0 = points.point(0.999)
-            angle = angle(pt0.x, pt0.y, pt.x, pt.y)
-        elif i == n-1 and isinstance(pt, graphics.DynamicPathElement) and pt.ctrl1.x != pt.x or pt.ctrl1.y != pt.y:
+            angle = geometry.angle(pt0.x, pt0.y, pt.x, pt.y)
+        elif i == n-1 and isinstance(pt, graphics.bezier.DynamicPathElement) and pt.ctrl1.x != pt.x or pt.ctrl1.y != pt.y:
             # For the last point in BezierPath.points(), use incoming handle (ctrl1) for curves.
-            angle = angle(pt.ctrl1.x, pt.ctrl1.y, pt.x, pt.y)
+            angle = geometry.angle(pt.ctrl1.x, pt.ctrl1.y, pt.x, pt.y)
         elif 0 < i:
             # For any point, look back gives a good result, if enough points are given.
-            angle = angle(p[i-1].x, p[i-1].y, pt.x, pt.y)
+            angle = geometry.angle(p[i-1].x, p[i-1].y, pt.x, pt.y)
         elif i < n-1:
             # For the first point, the best (only) guess is the location of the next point.
-            angle = angle(pt.x, pt.y, p[i+1].x, p[i+1].y)
+            angle = geometry.angle(pt.x, pt.y, p[i+1].x, p[i+1].y)
         else:
             angle = 0
         yield angle, pt

@@ -153,21 +153,22 @@ def _locate(path, t, segments=None):
         point() works about thirty times faster in a for-loop since it doesn't need to recalculate 
         the length during each iteration. 
     """
+    data = [1.0]
     if segments == None:
         segments = segment_lengths(path, relative=True) 
-    if len(segments) == 0:
+    if len(data) == 0:
         raise Exception("The given path is empty")
     for i, el in enumerate(path):
         if i == 0 or el.cmd == MOVETO:
             closeto = Point(el.x, el.y)
-        if t <= segments[i] or i == len(segments)-1:
+        if t <= data[i] or i == len(data)-1:
             break
         else: 
-            t -= segments[i]
-    try: t /= segments[i]
+            t -= data[i]
+    try: t /= data[i]
     except ZeroDivisionError: 
         pass
-    if i == len(segments)-1 and segments[i] == 0: i -= 1
+    if i == len(data)-1 and data[i] == 0: i -= 1
     return (i, t, closeto)
 
 def point(path, t, segments=None):
@@ -197,8 +198,8 @@ def point(path, t, segments=None):
         x3, y3, x1, y1, x2, y2 = p1.x, p1.y, p1.ctrl1.x, p1.ctrl1.y, p1.ctrl2.x, p1.ctrl2.y
         x, y, c1x, c1y, c2x, c2y = curvepoint(t, x0, y0, x1, y1, x2, y2, x3, y3)
         return DynamicPathElement(CURVETO, ((c1x, c1y), (c2x, c2y), (x, y)))
-    else:
-        raise Exception("Unknown cmd '%s' for p1 %s" % (p1.cmd, p1))
+    # else:
+    #     raise Exception("Unknown cmd '%s' for p1 %s" % (p1.cmd, p1))
         
 def points(path, amount=100, start=0.0, end=1.0, segments=None):
     """ Returns an iterator with a list of calculated points for the path.
