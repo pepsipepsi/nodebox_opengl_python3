@@ -1,7 +1,10 @@
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
 
-from graphics.shader import gradient, RADIAL, mask, invert
+from nodebox.graphics.context import *
+from nodebox.graphics import *
+
+from nodebox.graphics.shader import gradient, RADIAL, mask, invert
 
 # Render a radial gradient image.
 # Without additional parameters, the gradient will be grayscale.

@@ -1,5 +1,10 @@
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
+
+from random import randrange
+
+from nodebox.graphics.context import *
+from nodebox.graphics import *
 
 # The pixels() command yields a list of pixels from a given image.
 # Since this is a relatively slow operation, this is not useful for dynamic image processing,
@@ -29,7 +34,7 @@ def draw(canvas):
         clr.alpha *= 0.5
         fill(clr)
         stroke(clr)
-        strokewidth(random(5))
+        strokewidth(randrange(1, 5, 1))
         r = random(5, 100)
         ellipse(random(canvas.width), random(canvas.height), r*2, r*2)
     

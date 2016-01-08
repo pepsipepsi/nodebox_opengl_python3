@@ -4,8 +4,11 @@
 # If you edit and save this file, changes are automatically reflected,
 # while the canvas started in 04-live1.py keeps on running.
 
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
+
+from nodebox.graphics.context import *
+from nodebox.graphics import *
 
 #canvas.clear()
 for i in range(10):

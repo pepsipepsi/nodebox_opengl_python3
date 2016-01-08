@@ -1,5 +1,8 @@
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
+
+from nodebox.graphics.context import *
+from nodebox.graphics import *
 
 # The BezierPath object handles complex vector shapes made up of curves and lines.
 # As with images and text, it is a good idea to create the path once, outside the draw loop.

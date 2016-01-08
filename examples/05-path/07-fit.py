@@ -1,7 +1,8 @@
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
 
-#jf - same as the others, map has no len
+from nodebox.graphics.context import *
+from nodebox.graphics import *
 
 # This example demonstrated how to fit text to a path using the directed() command
 # (thanks to Karsten Wolf).

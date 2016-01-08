@@ -1,5 +1,8 @@
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
+
+from nodebox.graphics.context import *
+from nodebox.graphics import *
 
 #jf - this one is messed up because the bezier map of points needs to be cast to a list in order for len to work
 

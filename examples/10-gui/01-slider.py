@@ -1,8 +1,11 @@
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
 
-from graphics.geometry import coordinates
-from gui.controls import Slider
+from nodebox.graphics.context import *
+from nodebox.graphics import *
+
+from nodebox.graphics.geometry import coordinates
+from nodebox.gui.controls import Slider
 
 # all of these controls ones are broken because of a lambda expression that needs to be changed to avoid tuple unpacking
 

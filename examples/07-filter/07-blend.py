@@ -1,7 +1,10 @@
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
 
-from graphics.shader import multiply
+from nodebox.graphics.context import *
+from nodebox.graphics import *
+
+from nodebox.graphics.shader import multiply
 
 # Blend modes are used to combine the pixels of two images,
 # in different ways than standard transparency.

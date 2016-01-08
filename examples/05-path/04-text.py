@@ -1,5 +1,8 @@
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
+
+from nodebox.graphics.context import *
+from nodebox.graphics import *
 
 #    this throws an error
 #    raise Exception("no glyph path information for %s %s '%s'" % (w, fontname, ch))

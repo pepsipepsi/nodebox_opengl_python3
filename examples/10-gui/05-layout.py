@@ -1,7 +1,9 @@
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
 
-from gui.controls import *
+from nodebox.graphics import *
+
+from nodebox.gui.controls import *
 
 # Comparison between Rows and Row containers.
 # Both are subclasses of Layout.

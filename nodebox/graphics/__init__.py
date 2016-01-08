@@ -1,11 +1,13 @@
 #rom nodebox.graphics         import shader
 from nodebox.graphics         import physics
-from graphics.context         import Text
-from nodebox.graphics.noise   import noise
+from nodebox.graphics.context import Text
 from nodebox.graphics.context import Canvas
+from nodebox.graphics.noise   import noise
+from nodebox.graphics.context import line
+from nodebox.graphics.context import ellipse
 
-physics.line    = context.line
-physics.ellipse = context.ellipse
+physics.line    = line
+physics.ellipse = ellipse
 physics.Text    = Text
 
 #-----------------------------------------------------------------------------------------------------

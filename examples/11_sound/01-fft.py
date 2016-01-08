@@ -1,9 +1,8 @@
-import os, sys;
-
+import os, sys
 sys.path.insert(0, os.path.join("..",".."))
 
-from graphics import canvas
-from graphics.context import *
+from nodebox.graphics import canvas
+from nodebox.graphics.context import *
 
 from nodebox.sound import PD, LOCALHOST
 

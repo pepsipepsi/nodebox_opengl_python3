@@ -1,8 +1,9 @@
-# Add the upper directory (where the nodebox module is) to the search path.
-import os, sys; sys.path.insert(0, os.path.join("..", ".."))
-import warnings
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
 
-from graphics import canvas
+from nodebox.graphics import *
+
+import warnings
 
 # Live coding example.
 # The actual drawing code is in 04-live2.py.

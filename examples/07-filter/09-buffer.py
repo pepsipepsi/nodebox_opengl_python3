@@ -1,8 +1,11 @@
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
 
-from graphics.geometry import coordinates
-from graphics.shader   import dropshadow, OffscreenBuffer, transparent, stretch
+from nodebox.graphics.context import *
+from nodebox.graphics import *
+
+from nodebox.graphics.geometry import coordinates
+from nodebox.graphics.shader   import dropshadow, OffscreenBuffer, transparent, stretch
 
 from time import time
 

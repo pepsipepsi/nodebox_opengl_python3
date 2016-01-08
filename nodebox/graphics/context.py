@@ -11,7 +11,7 @@
 # Debugging must be switched on or of before other modules are imported.
 import pyglet
 
-from graphics import geometry
+from nodebox.graphics import geometry
 
 pyglet.options['debug_gl'] = False
 
@@ -19,7 +19,7 @@ from pyglet.text.document import FormattedDocument
 
 #from ext import psyco
 #from graphics.shader import render
-from graphics.geometry import *
+from nodebox.graphics.geometry import *
 
 from pyglet.gl     import *
 from pyglet.image  import Texture
@@ -159,11 +159,6 @@ class Color(list):
     def _get_rgb(self):
         return self[0], self[1], self[2]
 
-    # def _set_rgb(self, (r,g,b)):
-    #     self[0] = r
-    #     self[1] = g
-    #     self[2] = b
-
     def _set_rgb(self, color):
         self[0] = color[0]
         self[1] = color[1]
@@ -173,12 +168,6 @@ class Color(list):
     
     def _get_rgba(self):
         return self[0], self[1], self[2], self[3]
-
-    # def _set_rgba(self, (r,g,b,a)):
-    #     self[0] = r
-    #     self[1] = g
-    #     self[2] = b
-    #     self[3] = a
 
     def _set_rgba(self, color):
         self[0] = color[0]
@@ -1034,13 +1023,13 @@ class BezierPath(list):
                 # With relative precision, we use the (rough) curve length to determine the number of lines.
                 x1, y1, x2, y2, x3, y3 =  pt.ctrl1.x, pt.ctrl1.y, pt.ctrl2.x, pt.ctrl2.y, pt.x, pt.y
                 if isinstance(precision, float):
-                    n = int(max(0, precision) * graphics.bezier.curvelength(x0, y0, x1, y1, x2, y2, x3, y3, 3))
+                    n = int(max(0, precision) * nodebox.graphics.bezier.curvelength(x0, y0, x1, y1, x2, y2, x3, y3, 3))
                 else:
                     n = int(max(0, precision))
                 if n > 0:
                     xi, yi = x0, y0
                     for i in range(n+1):
-                        xj, yj, vx1, vy1, vx2, vy2 = graphics.bezier.curvepoint(float(i) / n, x0, y0, x1, y1, x2, y2, x3, y3)
+                        xj, yj, vx1, vy1, vx2, vy2 = nodebox.graphics.bezier.curvepoint(float(i) / n, x0, y0, x1, y1, x2, y2, x3, y3)
                         contours[-1].append((xi, yi))
                         contours[-1].append((xj, yj))
                         xi, yi = xj, yj
@@ -1114,23 +1103,23 @@ class BezierPath(list):
             See the linear interpolation math in bezier.py.
         """
         if self._segments is None:
-            self._segments = graphics.bezier.length(self, segmented=True, n=10)
-        return graphics.bezier.point(self, t, segments=self._segments)
+            self._segments = nodebox.graphics.bezier.length(self, segmented=True, n=10)
+        return nodebox.graphics.bezier.point(self, t, segments=self._segments)
     
     def points(self, amount=2, start=0.0, end=1.0):
         """ Returns a list of PathElements along the path.
             To omit the last point on closed paths: end=1-1.0/amount
         """
         if self._segments is None:
-            self._segments = graphics.bezier.length(self, segmented=True, n=10)
-        return graphics.bezier.points(self, amount, start, end, segments=self._segments)
+            self._segments = nodebox.graphics.bezier.length(self, segmented=True, n=10)
+        return nodebox.graphics.bezier.points(self, amount, start, end, segments=self._segments)
     
     def addpoint(self, t):
         """ Inserts a new PathElement at time t (0.0-1.0) on the path.
         """
         self._segments = None
         self._index = {}
-        return graphics.bezier.insert_point(self, t)
+        return nodebox.graphics.bezier.insert_point(self, t)
         
     split = addpoint
     
@@ -1377,7 +1366,7 @@ def directed(points):
             # For a point on a curve, the control handle gives the best direction.
             # For PathElement (fixed point in BezierPath), ctrl2 tells us how the curve arrives.
             # For DynamicPathElement (returnd from BezierPath.point()), ctrl1 tell how the curve arrives.
-            ctrl = isinstance(pt, graphics.bezier.DynamicPathElement) and pt.ctrl1 or pt.ctrl2
+            ctrl = isinstance(pt, nodebox.graphics.bezier.DynamicPathElement) and pt.ctrl1 or pt.ctrl2
             angle = geometry.angle(ctrl.x, ctrl.y, pt.x, pt.y)
         elif 0 < i < n-1 and pt.__dict__.get("_cmd") == LINETO and p[i-1].__dict__.get("_cmd") == CURVETO:
             # For a point on a line preceded by a curve, look ahead gives better results.
@@ -1390,7 +1379,7 @@ def directed(points):
             # For the last point in a BezierPath, we can calculate a previous point very close by.
             pt0 = points.point(0.999)
             angle = geometry.angle(pt0.x, pt0.y, pt.x, pt.y)
-        elif i == n-1 and isinstance(pt, graphics.bezier.DynamicPathElement) and pt.ctrl1.x != pt.x or pt.ctrl1.y != pt.y:
+        elif i == n-1 and isinstance(pt, nodebox.graphics.bezier.DynamicPathElement) and pt.ctrl1.x != pt.x or pt.ctrl1.y != pt.y:
             # For the last point in BezierPath.points(), use incoming handle (ctrl1) for curves.
             angle = geometry.angle(pt.ctrl1.x, pt.ctrl1.y, pt.x, pt.y)
         elif 0 < i:
@@ -4145,4 +4134,4 @@ def ximport(library):
 #-----------------------------------------------------------------------------------------------------
 # Linear interpolation math for BezierPath.point() etc.
 
-import graphics.bezier
+import nodebox.graphics.bezier

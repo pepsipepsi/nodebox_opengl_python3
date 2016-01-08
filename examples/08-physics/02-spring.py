@@ -1,7 +1,10 @@
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
 
-from graphics.physics import Particle, Spring, System
+from nodebox.graphics.context import *
+from nodebox.graphics import *
+
+from nodebox.graphics.physics import Particle, Spring, System
 
 #jf - I see nothing when this runs
 

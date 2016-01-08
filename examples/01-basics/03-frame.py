@@ -1,7 +1,8 @@
-from math import sin, cos
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
 
-from graphics import canvas
-from graphics.context import *
+from nodebox.graphics.context import *
+from nodebox.graphics import *
 
 # Here is the "Hypnoval", a classic example in NodeBox for Mac OS X.
 # It uses the canvas.frame counter to create variation in each frame.

@@ -1,8 +1,10 @@
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
+
+from nodebox.graphics.context import *
+from nodebox.graphics import *
 
 from nodebox.graphics.geometry import distance
-from math import sqrt
 
 def spider(string, x=0, y=0, radius=25, **kwargs):
     """ A path filter that creates web threading along the characters of the given string.

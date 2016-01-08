@@ -1,6 +1,10 @@
-from graphics import canvas, noise
-from graphics.context import *
-from graphics.shader import solid
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
+
+from nodebox.graphics.context import *
+from nodebox.graphics import *
+
+from nodebox.graphics.shader import solid
 
 # Create a pixels array from a solid white image:
 

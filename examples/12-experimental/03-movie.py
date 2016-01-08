@@ -1,8 +1,7 @@
-# Add the upper directory (where the nodebox module is) to the search path.
-import os, sys; sys.path.insert(0, os.path.join("..", ".."))
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
 
-from graphics import canvas
-from graphics.context import *
+from nodebox.graphics.context import *
 
 import tempfile
 import subprocess

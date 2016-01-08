@@ -9,8 +9,8 @@ from ctypes import c_uint
 
 from pyglet.gl         import *
 from pyglet.image      import Texture, SolidColorImagePattern
-from graphics.context  import Image, texture
-from graphics.geometry import lerp, clamp
+from nodebox.graphics.context  import Image, texture
+from nodebox.graphics.geometry import lerp, clamp
 from math              import radians
 
 def next(generator, default=None):

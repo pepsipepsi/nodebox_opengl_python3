@@ -14,7 +14,6 @@
 07_filter
 	05-render
 08_physics
-	02_spring
 	04_animation
 	07_graph
 09_layer

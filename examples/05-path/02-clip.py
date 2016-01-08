@@ -1,5 +1,8 @@
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
+
+from nodebox.graphics.context import *
+from nodebox.graphics import *
 
 # Here, the leaf shape from the previous example is reused,
 # but instead of simply coloring it with blue, we give it a nice gradient touch.

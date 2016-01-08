@@ -1,7 +1,10 @@
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
 
-from graphics.shader import colorize, blur
+from nodebox.graphics.context import *
+from nodebox.graphics import *
+
+from nodebox.graphics.shader import colorize, blur
 
 #loads shader.py, there are some type issues that need to be fixed
 

@@ -1,6 +1,8 @@
-import os
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
+
+from nodebox.graphics.context import *
+from nodebox.graphics import *
 
 from nodebox.graphics.geometry import distance, angle, smoothstep
 

@@ -1,8 +1,8 @@
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
 
-#jf - this won't run because the map that holds the points needs to be converted to a list in order for it to have a length property
-#probably pretty easy to fix
+from nodebox.graphics.context import *
+from nodebox.graphics import *
 
 # The classic NodeBox for Mac OS X has interesting path mathematics functionality.
 # This functionality is also present in NodeBox for OpenGL.
@@ -52,7 +52,7 @@ def draw(canvas):
         rotate(90)            # Indicate the normal (i.e. the line perpendicular to the tangent)
         line(0, 0, 300, 0, strokestyle=DASHED)
         pop()                 # Reset origin point, scale and rotation.
-            
+
 canvas.size = 500, 500
 canvas.run(draw)
 

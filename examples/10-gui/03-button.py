@@ -1,7 +1,10 @@
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
 
-from gui.controls import *
+from nodebox.graphics.context import *
+from nodebox.graphics import *
+
+from nodebox.gui.controls import *
 
 # This is the same example as the previous, but with a button added to the panel.
 # All controls have a Control.on_action() event that fires when the user

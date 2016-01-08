@@ -1,7 +1,8 @@
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
 
-#jf - this one won't work for the same reason as the tangent example, map needs to be converted to a list
+from nodebox.graphics.context import *
+from nodebox.graphics import *
 
 # I always seem to forget how Bezier handles work.
 # This example clarifies which handles control what part of a curve.

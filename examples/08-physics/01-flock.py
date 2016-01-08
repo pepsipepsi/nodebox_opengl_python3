@@ -1,7 +1,10 @@
-from graphics import canvas
-from graphics.context import *
+import os, sys
+sys.path.insert(0, os.path.join("..",".."))
 
-from graphics.physics import Vector, Boid, Flock, Obstacle
+from nodebox.graphics.context import *
+from nodebox.graphics import *
+
+from nodebox.graphics.physics import Vector, Boid, Flock, Obstacle
 
 # Flocking can be used to simulate birds, herds, or school of fish.
 # Each "boid" in the flock adheres to a simple set of rules:
