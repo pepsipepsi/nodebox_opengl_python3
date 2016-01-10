@@ -1,9 +1,16 @@
 # nodebox_opengl_python3
-Half done port of the wonderful nodebox opengl project to python 3.x. This needs pyglet and python-future. This includes examples from nodebox for opengl and the original nodebox 1.
 
-I didn't like that I needed to use python 2.7 to play with this, so I'm porting it to modern python (python 3.5.1) piece by piece. It's not at 100% yet.
+creative coding in pure python... 
 
-functionality by example groupings (non numbered are the Nodebox 1 examples)
+This is a python 3 port of the wonderful nodebox opengl project! This needs pyglet and python-future to run and includes examples from nodebox for opengl and the original nodebox 1.
+
+This is tested with python 3.5.1.
+
+The core drawing libraries are ported and work almost perfectly. The image filters, sound and gui stuff are not working yet.
+
+Nodebox for OpenGL was created by Frederik De Bleser and Tom De Smedt!
+
+what's working (non numbered are the Nodebox 1 examples)
 
 all working
 
@@ -33,5 +40,3 @@ Advanced
 Content  
 Interactivity  
 Path  
-
-Thanks to the original creators for sharing this code, it's definitely one of the coolest things ever created with python and pyglet.
