@@ -6,6 +6,9 @@
 	rect(lower left x, lower left y, width, height)  
 	ellipse(center x, center y, width, height)  
 	triangle(point 1 x, point 1 y, point 2 x, point 2 y, point 3 x, point 3 y)  
+	arrow(x, y, width)  
+	star(x, y, number of points, outer=100, inner=50)  
+	supershape(x, y, width, height, m, n1, n2, n3, points=100, percentage=1.0, range=2*pi)  
 
 # color commands
 
@@ -25,7 +28,7 @@
 --positive clockwise  
 	scale()  
 --0 - 1 decimal = shrink  
---more than 1 = grow
+--more than 1 = grow  
 	push()  
 	pop()  
 
@@ -33,6 +36,7 @@
 
 	beginpath()  
 	endpath()  
+	reset()  
 
 	moveto(origin x, origin y)  
 	curveto(point 1 x, point 1 y, point 2 x, point 2 y, point 3 x, point 3 y)  
@@ -40,6 +44,7 @@
 	lineto(destination x, destination y)  
 
 	drawpath()  
+	directed(points)  
 
 --using beginpath/endpath  
 
@@ -83,12 +88,13 @@
 
 	DynamicPathElement(cmd='curveto', x=7.0, y=154.7, ctrl1=(18.8, 103.1), ctrl2=(3.1, 171.9))  
 
-# canvas/mouse control
+# canvas/mouse/keyboard control
 
 	canvas.size  
 	canvas.run()  
 	canvas.clear()  
 	canvas.frame  
+	canvas.fps  
 	canvas.mouse.x  
 	canvas.mouse.y  
 	canvas.mouse.dx  
@@ -97,6 +103,13 @@
 	canvas.mouse.modifiers (CTRL | SHIFT | ALT)  
 	canvas.mouse.pressed  
 	canvas.mouse.dragged  
+
+	keys = canvas.keys  
+	keys[]          # All keys pressed (SHIFT + "a" => [SHIFT, "a"])  
+	keys.char       # Last key pressed (SHIFT + "a" => "A")  
+	keys.code       # Last key pressed (SHIFT + "a" => "a")  
+	keys.modifiers  # List of modifier keys (CTRL, SHIFT, OPTION)  
+	keys.pressed    # True if a key is pressed on the keyboard  
 
 # math
 
@@ -122,6 +135,15 @@
 	image(Image("filename"), x, y, (red, green, blue), alpha)  
 --coords are of lower left corner  
 	crop()  
+
+	img.draw(  
+       x = None,   
+       y = None,   
+   width = None,   
+  height = None,   
+   alpha = None,   
+   color = None,  
+  filter = None)  
 
 # image filters 
 

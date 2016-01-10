@@ -14,7 +14,7 @@ from nodebox.graphics import *
 # You can change the size of the canvas to get a bigger or smaller playing field.
 
 # The height of the bar at the bottom displaying the current time.
-STATUS_BAR_HEIGHT = 12
+STATUS_BAR_HEIGHT = 18
 
 # The import statement imports some import functions needed for geometry calculations
 from math import pi, sqrt, sin, cos, asin, atan2
@@ -70,19 +70,19 @@ class Blob:
         oval(0.2, -0.5, 1.0, 1.0)
         pop()
 
-def update(self, hero, blobs):
-    # Increase and decrease the size based on the speed of the blob
-    self.size = abs(sin(self.seed+FRAME/(5.0-self.speed*2.0)) * 2.0+self.seed) + 4.0
-    # This code implements the chase behaviour of the blobs.
-    # First, calculate the angle between ourselves and the hero
-    self.angle = angle(self.x, self.y, hero.x, hero.y)
-    # Then, move in that direction using the moving speed
-    self.x, self.y = coordinates(self.x, self.y, self.speed, self.angle)
-    # Calculate if I'm not bumping into another blob. If I am, calculate a new
-    # jump to an empty spot on the board.
-    for blob in blobs:
-        if blob is not self and abs(distance(self.x, self.y, blob.x, blob.y)) < blob.size*2:
-            self.x, self.y = random_spot_away_from_hero(hero)
+    def update(self, hero, blobs):
+        # Increase and decrease the size based on the speed of the blob
+        self.size = abs(sin(self.seed+FRAME/(5.0-self.speed*2.0)) * 2.0+self.seed) + 4.0
+        # This code implements the chase behaviour of the blobs.
+        # First, calculate the angle between ourselves and the hero
+        self.angle = angle(self.x, self.y, hero.x, hero.y)
+        # Then, move in that direction using the moving speed
+        self.x, self.y = coordinates(self.x, self.y, self.speed, self.angle)
+        # Calculate if I'm not bumping into another blob. If I am, calculate a new
+        # jump to an empty spot on the board.
+        for blob in blobs:
+            if blob is not self and abs(distance(self.x, self.y, blob.x, blob.y)) < blob.size*2:
+                self.x, self.y = random_spot_away_from_hero(hero)
 
 
 def random_spot_away_from_hero(hero, mindist = 20.0):
@@ -115,7 +115,7 @@ def draw(canvas):
 
     # To make things a little more interesting, we rotate and scale the canvas while
     # the game is running. For this to work, we need corner-mode transformations.
-    transform(CORNER)
+    #transform(CORNER)
     # Move to the middle of the screen to set the rotation. This makes sure the rotation
     # isn't applied from a corner, but from the middle of the screen.
     translate(500/2, 500/2)
@@ -139,17 +139,20 @@ def draw(canvas):
         # Check the keys and move the hero accordingly.
         # The min and max lines keep the hero within the bounds
         # of the playing field
-        if keydown:
-            if keycode == KEY_UP:
+
+        key = canvas.keys
+
+        if key.pressed:
+            if key.code == UP:
                 hero.y -= hero.speed
                 hero.y = max(hero.size, hero.y)
-            if keycode == KEY_DOWN:
+            if key.code == DOWN:
                 hero.y += hero.speed
                 hero.y = min(500-hero.size, hero.y)
-            if keycode == KEY_LEFT:
+            if key.code == LEFT:
                 hero.x -= hero.speed
                 hero.x = max(hero.size, hero.x)
-            if keycode == KEY_RIGHT:
+            if key.code == RIGHT:
                 hero.x += hero.speed
                 hero.x = min(500-hero.size, hero.x)
 
@@ -182,14 +185,14 @@ def draw(canvas):
     fill(0,0.6)
     rect(0,500-STATUS_BAR_HEIGHT, 500, STATUS_BAR_HEIGHT)
     fill(1)
-    text("%.2f seconds" % t, 5, 500-2)
+    text("%.2f seconds" % t, 5, 500-15)
 
     # If the game is over, scale up the hero to get a black screen
     # and draw the "GAME OVER" message
     if gameover:
         if hero.size < 500:
             hero.size += 30.0
-        fill(1)
+        fill(0)
         text("GAME OVER", (500/2.0)-textwidth("game over")/2.0, 500/2)
 
 setup()
