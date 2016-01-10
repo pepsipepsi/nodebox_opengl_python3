@@ -20,6 +20,8 @@ all working
 04_text  
 06_math  
 09_layer  
+07_filter  
+08_physics  
 10_gui  
 Animation  
 Grid  
@@ -28,9 +30,7 @@ Primitives
 
 most working
 
-05_path  
-07_filter  
-08_physics  
+05_path(only spider broken)  
 Text  
 
 none working

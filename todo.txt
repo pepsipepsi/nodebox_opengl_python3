@@ -1,5 +1,3 @@
 fix issue with textpaths not returning the right points
 
-fix "decode" method call in "07-graph" example 
-
 play with sound stuff, it may not actually be broken

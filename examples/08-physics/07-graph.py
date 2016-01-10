@@ -30,8 +30,8 @@ for i in range(75):
 
 # Two handy tricks to prettify the layout:
 # 1) Nodes with a higher weight (i.e. incoming traffic) appear bigger.
-for node in g.nodes:
-    node.radius = node.radius + node.radius*node.weight
+# for node in g.nodes:
+#     node.radius = node.radius + node.radius*node.weight
 # 2) Nodes with only one connection ("leaf" nodes) have a shorter connection.
 for node in g.nodes:
     if len(node.edges) == 1:

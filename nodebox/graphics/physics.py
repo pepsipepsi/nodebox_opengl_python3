@@ -17,7 +17,7 @@ from past.builtins import basestring
 # float("inf") doesn't work on windows.
 INFINITE = 1e20
 
-# This module is standalone, line(), ellipse() and Text.draw() 
+# This module is standalone, line(), ellipse() and Text.draw()
 # must be either implemented or patched:
 def line(x1, y1, x2, y2, stroke=(0,0,0,1), strokewidth=1):
     pass
@@ -43,7 +43,7 @@ class Text:
 # A vector is frequently represented by a line segment with an arrow.
 
 class Vector(object):
-    
+
     def __init__(self, x=0, y=0, z=0, length=None, angle=None):
         """ A vector represents a direction and a magnitude (or length).
             Vectors can be added, subtracted, multiplied, divided, flipped, and 2D rotated.
@@ -52,19 +52,19 @@ class Vector(object):
         self.x = float(x)
         self.y = float(y)
         self.z = float(z)
-        if length is not None: 
+        if length is not None:
             self.length = length
-        if angle is not None: 
+        if angle is not None:
             self.angle = angle
 
     def copy(self):
         return Vector(self.x, self.y, self.z)
-        
+
     def __getitem__(self, i):
         return (self.x, self.y, self.z)[i]
     def __setitem__(self, i, v):
         setattr(self, ("x", "y", "z")[i], float(v))
-            
+
     def _get_xyz(self):
         return (self.x, self.y, self.z)
     def _set_xyz(self, coords):
@@ -72,7 +72,7 @@ class Vector(object):
         self.y = float(coords[1])
         self.z = float(coords[2])
     xyz = property(_get_xyz, _set_xyz)
-        
+
     def _get_xy(self):
         return (self.x, self.y)
     def _set_xy(self, coords):
@@ -114,7 +114,7 @@ class Vector(object):
         """ Yields a new vector that is the normalized vector of this vector.
         """
         d = self.length
-        if d == 0: 
+        if d == 0:
             return self.copy()
         return Vector(self.x/d, self.y/d, self.z/d)
     normalized = unit = property(_normalized)
@@ -145,7 +145,7 @@ class Vector(object):
         """
         return Vector(self.y, -self.x, self.z)
     orthogonal = perpendicular = normal = property(_orthogonal)
-    
+
     def _get_angle(self):
         """ Yields the 2D direction of the vector.
         """
@@ -160,7 +160,7 @@ class Vector(object):
         """ Rotates the direction of the vector in 2D.
         """
         self.angle += degrees
-        
+
     def rotated(self, degrees):
         """ Returns a copy of the vector with direction rotated in 2D.
         """
@@ -173,26 +173,26 @@ class Vector(object):
         """
         return degrees(atan2(v.y, v.x) - atan2(self.y, self.x))
     angle_between = angle_to
-    
+
     # Arithmetic operators.
     # + - * / returns new vector objects.
     def __add__(self, v):
-        if isinstance(v, (int, float)): 
+        if isinstance(v, (int, float)):
             return Vector(self.x+v, self.y+v, self.z+v)
         return Vector(self.x+v.x, self.y+v.y, self.z+v.z)
     def __sub__(self, v):
-        if isinstance(v, (int, float)): 
+        if isinstance(v, (int, float)):
             return Vector(self.x-v, self.y-v, self.z-v)
         return Vector(self.x-v.x, self.y-v.y, self.z-v.z)
     def __mul__(self, v):
-        if isinstance(v, (int, float)): 
+        if isinstance(v, (int, float)):
             return Vector(self.x*v, self.y*v, self.z*v)
         return Vector(self.x*v.x, self.y*v.y, self.z*v.z)
     def __div__(self, v):
-        if isinstance(v, (int, float)): 
+        if isinstance(v, (int, float)):
             return Vector(self.x/v, self.y/v, self.z/v)
         return Vector(self.x/v.x, self.y/v.y, self.z/v.z)
-    
+
     # += -= *= /= modify the vector coordinates in-place.
     def __iadd__(self, v):
         if isinstance(v, (int, float)):
@@ -215,7 +215,7 @@ class Vector(object):
         """ Returns a scalar that is the dot product between the two vectors.
         """
         return self.x*v.x + self.y*v.y + self.z*v.z
-        
+
     def cross(self, v):
         """ Returns a new vector that is the cross product between the two vectors.
         """
@@ -231,7 +231,7 @@ class Vector(object):
     def __ne__(self, v):
         return not self.__eq__(v)
 
-    def __repr__(self): 
+    def __repr__(self):
         return "%s(%.2f, %.2f, %.2f)" % (self.__class__.__name__, self.x, self.y, self.z)
 
     def draw(self, x, y):
@@ -261,7 +261,7 @@ def _uid():
     global _UID; _UID+=1; return _UID
 
 class Boid:
-    
+
     def __init__(self, flock, x=0, y=0, z=0, sight=70, space=30):
         """ An agent in a flock with an (x,y,z)-position subject to different forces.
             - sight : radius of local flockmates when calculating cohesion and alignment.
@@ -278,31 +278,31 @@ class Boid:
         self.space    = space # The radius of separation.
         self.dodge    = False # Avoiding an obstacle?
         self.crowd    = 0     # Percentage (0.0-1.0) of flockmates within sight.
-    
+
     def __eq__(self, other):
         # Comparing boids by id makes it significantly faster.
         return isinstance(other, Boid) and self._id == other._id
     def __ne__(self, other):
         return not self.__eq__(other)
-                
+
     def copy(self):
         b = Boid(self.flock, self.x, self.y, self.z, self.sight, self.space)
         b.velocity = self.velocity.copy()
         b.target   = self.target
         return b
-        
+
     @property
     def heading(self):
         """ The boid's heading as an angle in degrees.
         """
         return self.velocity.angle
-        
+
     @property
     def depth(self):
         """ The boid's relative depth (0.0-1.0) in the flock's container box.
         """
         return not self.flock.depth and 1.0 or max(0.0, min(1.0, self.z / self.flock.depth))
-    
+
     def near(self, boid, distance=50):
         """ Returns True if the given boid is within distance.
         """
@@ -310,7 +310,7 @@ class Boid:
         return abs(self.x - boid.x) < distance and \
                abs(self.y - boid.y) < distance and \
                abs(self.z - boid.z) < distance
-    
+
     def separation(self, distance=25):
         """ Returns steering velocity (vx,vy,vz) to avoid crowding local flockmates.
         """
@@ -321,7 +321,7 @@ class Boid:
                 if abs(self.y-b.y) < distance: vy += self.y - b.y
                 if abs(self.z-b.z) < distance: vz += self.z - b.z
         return vx, vy, vz
-        
+
     def alignment(self, distance=50):
         """ Returns steering velocity (vx,vy,vz) towards the average heading of local flockmates.
         """
@@ -331,7 +331,7 @@ class Boid:
                 vx += b.velocity.x
                 vy += b.velocity.y
                 vz += b.velocity.z; n += 1
-        if n: 
+        if n:
             return (vx/n-self.velocity.x), (vy/n-self.velocity.y), (vz/n-self.velocity.z)
         return vx, vy, vz
 
@@ -342,11 +342,11 @@ class Boid:
         for b in self.flock:
             if b != self and b.near(self, distance):
                 vx += b.x
-                vy += b.y 
+                vy += b.y
                 vz += b.z; n += 1
         # Calculate percentage of flockmates within sight.
         self.crowd = float(n) / (len(self.flock) or 1)
-        if n: 
+        if n:
             return (vx/n-self.x), (vy/n-self.y), (vz/n-self.z)
         return vx, vy, vz
 
@@ -373,7 +373,7 @@ class Boid:
                 vx -= dx * f
                 vy -= dy * f
         return (vx, vy, 0)
-        
+
     def limit(self, speed=10.0):
         """ Limits the boid's velocity (the boid can momentarily go very fast).
         """
@@ -382,7 +382,7 @@ class Boid:
         if abs(v.x) > speed: v.x = v.x / m * speed
         if abs(v.y) > speed: v.y = v.y / m * speed
         if abs(v.z) > speed: v.z = v.z / m * speed
-    
+
     def update(self, separation=0.2, cohesion=0.2, alignment=0.6, avoidance=0.6, target=0.2, limit=15.0):
         """ Updates the boid's velocity based on the cohesion, separation and alignment forces.
             - separation: force that keeps boids apart.
@@ -399,28 +399,28 @@ class Boid:
         vx3, vy3, vz3 = self.alignment(self.sight)
         vx4, vy4, vz4 = self.avoidance()
         vx5, vy5, vz5 = self.target and (
-            (self.target.x-self.x), 
-            (self.target.y-self.y), 
+            (self.target.x-self.x),
+            (self.target.y-self.y),
             (self.target.z-self.z)) or (0,0,0)
         self.velocity.x += m1*vx1 + m2*vx2 + m3*vx3 + m4*vx4 + m5*vx5
         self.velocity.y += m1*vy1 + m2*vy2 + m3*vy3 + m4*vy4 + m5*vy5
         self.velocity.z += m1*vz1 + m2*vz2 + m3*vz3 + m4*vz4 + m5*vz5
-        self.velocity.z  = self.flock.depth and self.velocity.z or 0 # No z-axis for Flock.depth=0 
+        self.velocity.z  = self.flock.depth and self.velocity.z or 0 # No z-axis for Flock.depth=0
         self.limit(speed=limit)
         self.x += self.velocity.x
         self.y += self.velocity.y
         self.z += self.velocity.z
- 
+
     def seek(self, vector):
         """ Sets the given Vector as the boid's target.
         """
         self.target = vector
-        
+
     def __repr__(self):
         return "Boid(x=%.1f, y=%.1f, z=%.1f)" % (self.x, self.y, self.z)
 
 class Obstacle:
-    
+
     def __init__(self, x=0, y=0, z=0, radius=10):
         """ An obstacle with an (x, y, z) position and a radius.
             Boids will steer around obstacles that the flock is aware of, and that they can see.
@@ -429,7 +429,7 @@ class Obstacle:
         self.y = y
         self.z = z
         self.radius = radius
-        
+
     def copy(self):
         return Obstacle(self.x, self.y, self.z, self.radius)
 
@@ -437,7 +437,7 @@ class Obstacle:
         return "Obstacle(x=%.1f, y=%.1f, z=%.1f, radius=%.1f)" % (self.x, self.y, self.z, self.radius)
 
 class Flock(list):
-    
+
     def __init__(self, amount, x, y, width, height, depth=100.0, obstacles=[]):
         """ A flock of the given amount of boids, confined to a box.
             Obstacles can be added to Flock.obstacles (boids will steer away from them).
@@ -452,18 +452,18 @@ class Flock(list):
         self.obstacles = []
         for i in range(amount):
             # Boids will originate from the center of the flocking area.
-            b = Boid(self, 
-                self.x + 0.5 * (width  or 0), 
-                self.y + 0.5 * (height or 0), 
+            b = Boid(self,
+                self.x + 0.5 * (width  or 0),
+                self.y + 0.5 * (height or 0),
                          0.5 * (depth  or 0))
             self.append(b)
-    
+
     @property
     def boids(self):
         return self
-    
+
     def copy(self):
-        f = Flock(0, self.x, self.y, self.width, self.height, self.depth)        
+        f = Flock(0, self.x, self.y, self.width, self.height, self.depth)
         f.scattered = self.scattered
         f.gather    = self.gather
         f.obstacles = [o.copy() for o in self.obstacles]
@@ -474,17 +474,17 @@ class Flock(list):
     def seek(self, target):
         """ Sets the target vector of all boids in the flock (None for no target).
         """
-        for b in self: 
+        for b in self:
             b.seek(target)
 
     def sight(self, distance):
-        for b in self: 
+        for b in self:
             b.sight = distance
-            
+
     def space(self, distance):
-        for b in self: 
+        for b in self:
             b.space = distance
-    
+
     def constrain(self, force=1.0, teleport=False):
         """ Keep the flock inside the rectangular flocking area.
             The given force determines how fast the boids will swivel when near an edge.
@@ -494,25 +494,25 @@ class Flock(list):
         def _teleport(b):
             if b.x < self.x:
                 b.x = self.x + self.width
-            if b.x > self.x + self.width: 
+            if b.x > self.x + self.width:
                 b.x = self.x
-            if b.y < self.y: 
+            if b.y < self.y:
                 b.y = self.y + self.height
             if b.y > self.y + self.height:
                 b.y = self.y
         def _constrain(b):
             if b.x < self.x:
                 b.velocity.x += force * f * random()
-            if b.x > self.x + self.width: 
+            if b.x > self.x + self.width:
                 b.velocity.x -= force * f * random()
-            if b.y < self.y: 
+            if b.y < self.y:
                 b.velocity.y += force * f * random()
             if b.y > self.y + self.height:
                 b.velocity.y -= force * f * random()
         for b in self:
-            if b.z < 0: 
+            if b.z < 0:
                 b.velocity.z += force * f * random()
-            if b.z > self.depth: 
+            if b.z > self.depth:
                 b.velocity.z -= force * f * random()
             teleport and _teleport(b) \
                       or _constrain(b)
@@ -556,7 +556,7 @@ flock = Flock
 #--- FORCE -------------------------------------------------------------------------------------------
 
 class Force:
-    
+
     def __init__(self, particle1, particle2, strength=1.0, threshold=100.0):
         """ An attractive or repulsive force that causes objects with a mass to accelerate.
             A negative strength indicates an attractive force.
@@ -565,7 +565,7 @@ class Force:
         self.particle2 = particle2
         self.strength  = strength
         self.threshold = threshold
-                
+
     def apply(self):
         """ Applies the force between two particles, based on the distance and mass of the particles.
         """
@@ -595,7 +595,7 @@ force = Force
 #--- SPRING ------------------------------------------------------------------------------------------
 
 class Spring:
-    
+
     def __init__(self, particle1, particle2, length, strength=1.0):
         """ A force that exerts attractive resistance when its length changes.
             A spring acts as a flexible (but secure) connection between two particles.
@@ -605,12 +605,12 @@ class Spring:
         self.strength  = strength
         self.length    = length
         self.snapped   = False
-    
+
     def snap(self):
         """ Breaks the connection between the two particles.
         """
         self.snapped = True
-    
+
     def apply(self):
         """ Applies the force between two particles.
         """
@@ -618,7 +618,7 @@ class Spring:
         dx = self.particle2.x - self.particle1.x
         dy = self.particle2.y - self.particle1.y
         d = sqrt(dx*dx + dy*dy)
-        if d == 0: 
+        if d == 0:
             return
         # The attractive strength decreases for heavy particles.
         # The attractive strength increases when the spring is stretched.
@@ -630,9 +630,9 @@ class Spring:
         self.particle1.force.y += fy
         self.particle2.force.x -= fx
         self.particle2.force.y -= fy
-        
+
     def draw(self, **kwargs):
-        line(self.particle1.x, self.particle1.y, 
+        line(self.particle1.x, self.particle1.y,
              self.particle2.x, self.particle2.y, **kwargs)
 
     def __repr__(self):
@@ -645,7 +645,7 @@ spring = Spring
 MASS = "mass"
 
 class Particle:
-    
+
     def __init__(self, x, y, velocity=(0.0,0.0), mass=10.0, radius=10.0, life=None, fixed=False):
         """ An object with a mass subjected to attractive and repulsive forces.
             The object's velocity is an inherent force (e.g. a rocket propeller to escape gravity).
@@ -661,21 +661,21 @@ class Particle:
         self._age     = 0.0
         self.dead     = False
         self.fixed    = fixed
-    
+
     @property
     def age(self):
         # Yields the particle's age as a number between 0.0 and 1.0.
         return self.life and min(1.0, float(self._age) / self.life) or 0.0
-    
+
     def draw(self, **kwargs):
         r = self.radius * (1 - self.age)
         ellipse(self.x, self.y, r*2, r*2, **kwargs)
-        
+
     def __eq__(self, other):
         return isinstance(other, Particle) and self._id == other._id
     def __ne__(self, other):
         return not self.__eq__(other)
-   
+
     def __repr__(self):
         return "Particle(x=%.1f, y=%.1f, radius=%.1f, mass=%.1f)" % (
             self.x, self.y, self.radius, self.mass)
@@ -685,11 +685,11 @@ particle = Particle
 #--- SYSTEM ------------------------------------------------------------------------------------------
 
 class flist(list):
-    
+
     def __init__(self, system):
         # List of forces or springs that keeps System.dynamics in synch.
         self.system = system
-    
+
     def insert(self, i, force):
         list.insert(self, i, force)
         self.system._dynamics.setdefault(force.particle1._id, []).append(force)
@@ -703,12 +703,12 @@ class flist(list):
         f = list.pop(self, i)
         self.system._dynamics.pop(force.particle1._id)
         self.system._dynamics.pop(force.particle2._id)
-        return f        
+        return f
     def remove(self, force):
         i = self.index(force); self.pop(i)
 
 class System(object):
-    
+
     def __init__(self, gravity=(0,0), drag=0.0):
         """ A collection of particles and the forces working on them.
         """
@@ -746,7 +746,7 @@ class System(object):
         # or between source and any other particle if source is given.
         P = particles or self.particles
         for i, p1 in enumerate(P):
-            if source is None: 
+            if source is None:
                 [f(p1, p2) for p2 in P[i+1:]]
             else:
                 f(source, p1)
@@ -762,14 +762,14 @@ class System(object):
         """
         f = lambda p1, p2: self.forces.append(Force(p1, p2, strength, threshold))
         self._cross(f, source, particles)
-        
+
     def dynamics(self, particle, type=None):
         """ Returns a list of forces working on the particle, optionally filtered by type (e.g. Spring).
         """
         F = self._dynamics.get(isinstance(particle, Particle) and particle._id or particle, [])
         F = [f for f in F if type is None or isinstance(f, type)]
         return F
-        
+
     def limit(self, particle, m=None):
         """ Limits the movement of the particle to m.
             When repulsive particles are close to each other, their force can be very high.
@@ -783,10 +783,10 @@ class System(object):
         #    particle.velocity.length = m
         if m is not None:
             for f in (particle.force, particle.velocity):
-                if abs(f.x) > m: 
+                if abs(f.x) > m:
                     f.y *= m / abs(f.x)
                     f.x *= m / abs(f.x)
-                if abs(f.y) > m: 
+                if abs(f.y) > m:
                     f.x *= m / abs(f.y)
                     f.y *= m / abs(f.y)
 
@@ -829,14 +829,14 @@ class System(object):
                 # Apply lifespan.
                 p._age += 1
                 p.dead = p._age > p.life
-    
+
     @property
     def dead(self):
         # Yields True when all particles are dead (and we don't need to update anymore).
         for p in self.particles:
             if not p.dead: return False
         return True
-    
+
     def draw(self, **kwargs):
         """ Draws the system at the current iteration.
         """
@@ -878,7 +878,7 @@ system = System
 #--- EMITTER -----------------------------------------------------------------------------------------
 
 class Emitter(object):
-    
+
     def __init__(self, x, y, angle=0, strength=1.0, spread=10):
         """ A source that shoots particles in a given direction with a given strength.
         """
@@ -907,21 +907,21 @@ class Emitter(object):
         if self.system is not None:
             # Also append the particle to the system the emitter is part of.
             self.system.append(particle)
-    
+
     def _get_angle(self):
         return self.velocity.angle
     def _set_angle(self, v):
         self.velocity.angle = v
-        
+
     angle = property(_get_angle, _set_angle)
 
     def _get_strength(self):
         return self.velocity.length
     def _set_strength(self, v):
         self.velocity.length = max(v, 0.01)
-        
+
     strength = length = magnitude = property(_get_strength, _set_strength)
-            
+
     def update(self):
         """ Update the system and respawn dead particles.
             When a particle dies, it can be reused as a new particle fired from the emitter.
@@ -961,7 +961,7 @@ def deepcopy(o):
     raise Exception("don't know how to copy %s" % o.__class__.__name__)
 
 class Node(object):
-    
+
     def __init__(self, id="", radius=5, **kwargs):
         """ A node with a unique id in the graph.
             Node.id is drawn as a text label, unless optional parameter text=False.
@@ -979,18 +979,18 @@ class Node(object):
         self.stroke      = kwargs.pop("stroke", (0,0,0,1))
         self.strokewidth = kwargs.pop("strokewidth", 1)
         self.text        = kwargs.get("text", True) and \
-            Text(isinstance(id, bytes) and id or str(id).decode("utf-8", "ignore"),
+            Text(isinstance(id, bytes) and id or str(id),
                    width = 85,
                     fill = kwargs.pop("text", (0,0,0,1)),
                 fontsize = kwargs.pop("fontsize", 11), **kwargs) or None
         self._weight     = None # Calculated by Graph.eigenvector_centrality().
         self._centrality = None # Calculated by Graph.betweenness_centrality().
-    
+
     @property
     def _distance(self):
         # Graph.distance controls the (x,y) spacing between nodes.
         return self.graph and float(self.graph.distance) or 1.0
-    
+
     def _get_x(self):
         return self._x * self._distance
     def _get_y(self):
@@ -1010,7 +1010,7 @@ class Node(object):
         return self.graph is not None \
            and [e for e in self.graph.edges if self.id in (e.node1.id, e.node2.id)] \
             or []
-    
+
     @property
     def weight(self):
         """ Yields eigenvector centrality as a number between 0.0-1.0.
@@ -1018,7 +1018,7 @@ class Node(object):
         if self.graph and self._weight is None:
             self.graph.eigenvector_centrality()
         return self._weight
-        
+
     @property
     def centrality(self):
         """ Yields betweenness centrality as a number between 0.0-1.0.
@@ -1026,7 +1026,7 @@ class Node(object):
         if self.graph and self._centrality is None:
             self.graph.betweenness_centrality()
         return self._centrality
-        
+
     def flatten(self, depth=1, traversable=lambda node, edge: True, _visited=None):
         """ Recursively lists the node and nodes linked to it.
             Depth 0 returns a list with the node.
@@ -1036,12 +1036,12 @@ class Node(object):
         _visited = _visited or {}
         _visited[self.id] = (self, depth)
         if depth >= 1:
-            for n in self.links: 
+            for n in self.links:
                 if n.id not in _visited or _visited[n.id][1] < depth-1:
                     if traversable(self, self.links.edges[n.id]):
                         n.flatten(depth-1, traversable, _visited)
         return [n for n,d in _visited.values()] # Fast, but not order-preserving.
-    
+
     def draw(self, weighted=False):
         """ Draws the node as a circle with the given radius, fill, stroke and strokewidth.
             Draws the node centrality as a shadow effect when weighted=True.
@@ -1049,31 +1049,31 @@ class Node(object):
             Override this method in a subclass for custom drawing.
         """
         # Draw the node weight as a shadow (based on node betweenness centrality).
-        if weighted is not False and self.centrality > (weighted==True and -1 or weighted):
-            w = self.centrality * 35
+        if weighted is not False :
+            w = 0.25 * 35
             ellipse(
-                self.x, 
-                self.y, 
-                self.radius*2 + w, 
+                self.x,
+                self.y,
+                self.radius*2 + w,
                 self.radius*2 + w, fill=(0,0,0,0.2), stroke=None)
         # Draw the node.
         ellipse(
-            self.x, 
-            self.y, 
-            self.radius*2, 
+            self.x,
+            self.y,
+            self.radius*2,
             self.radius*2, fill=self.fill, stroke=self.stroke, strokewidth=self.strokewidth)
         # Draw the node text label.
         if self.text:
             self.text.draw(
-                self.x + self.radius, 
+                self.x + self.radius,
                 self.y + self.radius)
-        
+
     def contains(self, x, y):
         """ Returns True if the given coordinates (x, y) are inside the node radius.
         """
         return abs(self.x - x) < self.radius*2 and \
                abs(self.y - y) < self.radius*2
-               
+
     def __repr__(self):
         return "%s(id=%s)" % (self.__class__.__name__, repr(self.id))
 
@@ -1083,13 +1083,13 @@ class Node(object):
         return not self.__eq__(node)
 
 class Links(list):
-    
-    def __init__(self): 
+
+    def __init__(self):
         """ A list in which each node has an associated edge.
             The edge() method returns the edge for a given node id.
         """
         self.edges = dict()
-    
+
     def append(self, node, edge=None):
         if node.id not in self.edges:
             list.append(self, node)
@@ -1099,7 +1099,7 @@ class Links(list):
         list.remove(self, node)
         self.edges.pop(node.id, None)
 
-    def edge(self, node): 
+    def edge(self, node):
         return self.edges.get(isinstance(node, Node) and node.id or node)
 
 #--- EDGE --------------------------------------------------------------------------------------------
@@ -1120,32 +1120,32 @@ class Edge(object):
         self.type        = type
         self.stroke      = stroke
         self.strokewidth = strokewidth
-    
-    def _get_weight(self): 
+
+    def _get_weight(self):
         return self._weight
     def _set_weight(self, v):
         self._weight = v
         # Clear cached adjacency map in the graph, since edge weights have changed.
-        if self.node1.graph is not None: 
+        if self.node1.graph is not None:
             self.node1.graph._adjacency = None
-        if self.node2.graph is not None: 
+        if self.node2.graph is not None:
             self.node2.graph._adjacency = None
-    
+
     weight = property(_get_weight, _set_weight)
-        
+
     def draw(self, weighted=False, directed=False):
         """ Draws the edge as a line with the given stroke and strokewidth (increased with Edge.weight).
             Override this method in a subclass for custom drawing.
         """
         w = weighted and self.weight or 0
         line(
-            self.node1.x, 
-            self.node1.y, 
-            self.node2.x, 
+            self.node1.x,
+            self.node1.y,
+            self.node2.x,
             self.node2.y, stroke=self.stroke, strokewidth=self.strokewidth+w)
         if directed:
             self.draw_arrow(stroke=self.stroke, strokewidth=self.strokewidth+w)
-            
+
     def draw_arrow(self, **kwargs):
         """ Draws the direction of the edge as an arrow on the rim of the receiving node.
         """
@@ -1164,7 +1164,7 @@ class Edge(object):
         line(x01, y01, dx1, dy1, **kwargs)
         line(x01, y01, dx2, dy2, **kwargs)
         line(dx1, dy1, dx2, dy2, **kwargs)
-    
+
     def __repr__(self):
         return "%s(id1=%s, id2=%s)" % (self.__class__.__name__, repr(self.node1.id), repr(self.node2.id))
 
@@ -1174,7 +1174,7 @@ class Edge(object):
 # Dictionary values can be accessed by Node as well as by node id.
 class nodedict(dict):
     def __init__(self, graph, *args, **kwargs):
-        dict.__init__(self, *args, **kwargs)
+        #dict.__init__(self, *args, **kwargs)
         self.graph = graph
     def __contains__(self, node):
         return dict.__contains__(self, self.graph.get(node, node))
@@ -1185,7 +1185,7 @@ class nodedict(dict):
 
 def unique(list):
     u, b = [], {}
-    for item in list: 
+    for item in list:
         if item not in b: u.append(item); b[item]=True
     return u
 
@@ -1198,7 +1198,7 @@ WEIGHT, CENTRALITY = "weight", "centrality"
 ALL = "all"
 
 class Graph(dict):
-    
+
     def __init__(self, layout=SPRING, distance=10.0):
         """ A network of nodes connected by edges that can be drawn with a given layout.
         """
@@ -1208,13 +1208,13 @@ class Graph(dict):
         self._adjacency = None # Cached adjacency() dict.
         self.layout     = layout==SPRING and GraphSpringLayout(self) or GraphLayout(self)
         self.distance   = distance
-    
+
     def __getitem__(self, id):
-        try: 
+        try:
             return dict.__getitem__(self, id)
         except KeyError:
             raise Exception("no node with id '%s' in graph" % id)
-    
+
     def append(self, base, *args, **kwargs):
         """ Appends a Node or Edge to the graph: Graph.append(Node, id="rabbit").
         """
@@ -1223,7 +1223,7 @@ class Graph(dict):
             return self.add_node(*args, **kwargs)
         if issubclass(base, Edge):
             return self.add_edge(*args, **kwargs)
-    
+
     def add_node(self, id, *args, **kwargs):
         """ Appends a new Node to the graph.
             An optional base parameter can be used to pass a subclass of Node.
@@ -1237,7 +1237,7 @@ class Graph(dict):
             # Clear adjacency cache.
             self._adjacency = None
         return n
-    
+
     def add_edge(self, id1, id2, *args, **kwargs):
         """ Appends a new Edge to the graph.
             An optional base parameter can be used to pass a subclass of Edge:
@@ -1261,8 +1261,8 @@ class Graph(dict):
         n2.links.append(n1, edge=e1 or e2)
         # Clear adjacency cache.
         self._adjacency = None
-        return e2        
-            
+        return e2
+
     def remove(self, x):
         """ Removes the given Node (and all its edges) or Edge from the graph.
             Note: removing Edge a->b does not remove Edge b->a.
@@ -1275,77 +1275,77 @@ class Graph(dict):
                 if x in (e.node1, e.node2):
                     if x in e.node1.links: e.node1.links.remove(x)
                     if x in e.node2.links: e.node2.links.remove(x)
-                    self.edges.remove(e) 
+                    self.edges.remove(e)
         if isinstance(x, Edge):
             self.edges.remove(x)
         # Clear adjacency cache.
         self._adjacency = None
-    
+
     def node(self, id):
         """ Returns the node in the graph with the given id.
         """
         return self.get(id)
-    
+
     def edge(self, id1, id2):
         """ Returns the edge between the nodes with given id1 and id2.
         """
         return id1 in self and id2 in self and self[id1].links.edge(id2) or None
-    
+
     def paths(self, node1, node2, length=4, path=[]):
         """ Returns a list of paths (shorter than or equal to given length) connecting the two nodes.
         """
-        if not isinstance(node1, Node): 
+        if not isinstance(node1, Node):
             node1 = self[node1]
-        if not isinstance(node2, Node): 
+        if not isinstance(node2, Node):
             node2 = self[node2]
         return [[self[id] for id in p] for p in paths(self, node1.id, node2.id, length, path)]
-    
+
     def shortest_path(self, node1, node2, heuristic=None, directed=False):
         """ Returns a list of nodes connecting the two nodes.
         """
-        if not isinstance(node1, Node): 
+        if not isinstance(node1, Node):
             node1 = self[node1]
-        if not isinstance(node2, Node): 
+        if not isinstance(node2, Node):
             node2 = self[node2]
-        try: 
+        try:
             p = dijkstra_shortest_path(self, node1.id, node2.id, heuristic, directed)
             p = [self[id] for id in p]
             return p
         except IndexError:
             return None
-            
+
     def shortest_paths(self, node, heuristic=None, directed=False):
         """ Returns a dictionary of nodes, each linked to a list of nodes (shortest path).
         """
-        if not isinstance(node, Node): 
+        if not isinstance(node, Node):
             node = self[node]
         p = nodedict(self)
         for id, path in dijkstra_shortest_paths(self, node.id, heuristic, directed).iteritems():
             p[self[id]] = path and [self[id] for id in path] or None
-        return p 
-            
+        return p
+
     def eigenvector_centrality(self, normalized=True, reversed=True, rating={}, iterations=100, tolerance=0.0001):
         """ Calculates eigenvector centrality and returns a node => weight dictionary.
             Node.weight is updated in the process.
             Node.weight is higher for nodes with a lot of (indirect) incoming traffic.
         """
         ec = eigenvector_centrality(self, normalized, reversed, rating, iterations, tolerance)
-        ec = nodedict(self, ((self[id], w) for id, w in ec.iteritems()))
-        for n, w in ec.iteritems(): 
+        ec = nodedict(self, ((self[id], w) for id, w in ec.items()))
+        for n, w in ec.items():
             n._weight = w
         return ec
-            
+
     def betweenness_centrality(self, normalized=True, directed=False):
         """ Calculates betweenness centrality and returns a node => weight dictionary.
             Node.centrality is updated in the process.
             Node.centrality is higher for nodes with a lot of passing traffic.
         """
         bc = brandes_betweenness_centrality(self, normalized, directed)
-        bc = nodedict(self, ((self[id], w) for id, w in bc.iteritems()))
-        for n, w in bc.iteritems(): 
+        bc = nodedict(self, ((self[id], w) for id, w in bc.items()))
+        for n, w in bc.items():
             n._centrality = w
         return bc
-        
+
     def sorted(self, order=WEIGHT, threshold=0.0):
         """ Returns a list of nodes sorted by WEIGHT or CENTRALITY.
             Nodes with a lot of traffic will be at the start of the list.
@@ -1354,27 +1354,27 @@ class Graph(dict):
         nodes = ((o(n), n) for n in self.nodes if o(n) >= threshold)
         nodes = reversed(sorted(nodes))
         return [n for w, n in nodes]
-        
+
     def prune(self, depth=0):
         """ Removes all nodes with less or equal links than depth.
         """
         for n in (n for n in self.nodes if len(n.links) <= depth):
             self.remove(n)
-            
+
     def fringe(self, depth=0):
         """ For depth=0, returns the list of leaf nodes (nodes with only one connection).
             For depth=1, returns the list of leaf nodes and their connected nodes, and so on.
         """
         u = []; [u.extend(n.flatten(depth)) for n in self.nodes if len(n.links) == 1]
         return unique(u)
-        
+
     @property
     def density(self):
         """ Yields the number of edges vs. the maximum number of possible edges.
             For example, <0.35 => sparse, >0.65 => dense, 1.0 => complete.
         """
         return 2.0*len(self.edges) / (len(self.nodes) * (len(self.nodes)-1))
-        
+
     @property
     def is_complete(self):
         return self.density == 1.0
@@ -1384,32 +1384,32 @@ class Graph(dict):
     @property
     def is_sparse(self):
         return self.density < 0.35
-        
+
     def split(self):
         """ Returns the list of unconnected subgraphs.
         """
         return partition(self)
-    
+
     def update(self, iterations=10, **kwargs):
         """ Graph.layout.update() is called the given number of iterations.
         """
         for i in range(iterations):
             self.layout.update(**kwargs)
-        
+
     def draw(self, weighted=False, directed=False):
         """ Draws all nodes and edges.
         """
-        for e in self.edges: 
+        for e in self.edges:
             e.draw(weighted, directed)
-        for n in reversed(self.nodes): # New nodes (with Node._weight=None) first. 
+        for n in reversed(self.nodes): # New nodes (with Node._weight=None) first.
             n.draw(weighted)
-            
+
     def node_at(self, x, y):
         """ Returns the node at (x,y) or None.
         """
         for n in self.nodes:
             if n.contains(x, y): return n
-    
+
     def _add_node_copy(self, n, **kwargs):
         # Magical fairy dust to copy subclasses of Node.
         # We assume that the subclass constructor takes an optional "text" parameter
@@ -1419,20 +1419,20 @@ class Graph(dict):
         except TypeError:
             new = self.add_node(n.id, root=kwargs.get("root",False))
         new.__class__ = n.__class__
-        new.__dict__.update((k, deepcopy(v)) for k,v in n.__dict__.iteritems() 
+        new.__dict__.update((k, deepcopy(v)) for k,v in n.__dict__.iteritems()
             if k not in ("graph", "links", "_x", "_y", "force", "_weight", "_centrality"))
-    
+
     def _add_edge_copy(self, e, **kwargs):
         if kwargs.get("node1", e.node1).id not in self \
-        or kwargs.get("node2", e.node2).id not in self: 
+        or kwargs.get("node2", e.node2).id not in self:
             return
         new = self.add_edge(
-            kwargs.get("node1", self[e.node1.id]), 
+            kwargs.get("node1", self[e.node1.id]),
             kwargs.get("node2", self[e.node2.id]))
         new.__class__ = e.__class__
         new.__dict__.update((k, deepcopy(v)) for k,v in e.__dict__.iteritems()
             if k not in ("node1", "node2"))
-    
+
     def copy(self, nodes=ALL):
         """ Returns a copy of the graph with the given list of nodes (and connecting edges).
             The layout will be reset.
@@ -1441,7 +1441,7 @@ class Graph(dict):
         g.layout = self.layout.copy(graph=g)
         for n in (nodes==ALL and self.nodes or (isinstance(n, Node) and n or self[n] for n in nodes)):
             g._add_node_copy(n, root=self.root==n)
-        for e in self.edges: 
+        for e in self.edges:
             g._add_edge_copy(e)
         return g
 
@@ -1450,13 +1450,13 @@ class Graph(dict):
 # applies topology and geometry to derive two-dimensional representations of graphs.
 
 class GraphLayout:
-    
+
     def __init__(self, graph):
         """ Calculates node positions iteratively when GraphLayout.update() is called.
         """
         self.graph = graph
         self.iterations = 0
-    
+
     def update(self):
         self.iterations += 1
 
@@ -1466,7 +1466,7 @@ class GraphLayout:
             n._x = 0
             n._y = 0
             n.force = Vector(0,0)
-            
+
     @property
     def bounds(self):
         """ Returns a (x, y, width, height)-tuple of the approximate layout dimensions.
@@ -1484,7 +1484,7 @@ class GraphLayout:
         return GraphLayout(self, graph)
 
 class GraphSpringLayout(GraphLayout):
-    
+
     def __init__(self, graph):
         """ A force-based layout in which edges are regarded as springs.
             The forces are applied to the nodes, pulling them closer or pushing them apart.
@@ -1516,7 +1516,7 @@ class GraphSpringLayout(GraphLayout):
             node2.force.y += f * dy
             node1.force.x -= f * dx
             node1.force.y -= f * dy
-            
+
     def _attract(self, node1, node2, weight=0, length=1.0):
         # Updates Node.force with the attractive edge force.
         dx, dy, d, d2 = self._distance(node1, node2)
@@ -1528,7 +1528,7 @@ class GraphSpringLayout(GraphLayout):
         node2.force.y -= f * dy
         node1.force.x += f * dx
         node1.force.y += f * dy
-        
+
     def update(self, weight=10.0, limit=0.5):
         """ Updates the position of nodes in the graph.
             The weight parameter determines the impact of edge weight.
@@ -1537,7 +1537,7 @@ class GraphSpringLayout(GraphLayout):
         GraphLayout.update(self)
         # Forces on all nodes due to node-node repulsions.
         for i, n1 in enumerate(self.graph.nodes):
-            for j, n2 in enumerate(self.graph.nodes[i+1:]):          
+            for j, n2 in enumerate(self.graph.nodes[i+1:]):
                 self._repulse(n1, n2)
         # Forces on nodes due to edge attractions.
         for e in self.graph.edges:
@@ -1549,7 +1549,7 @@ class GraphSpringLayout(GraphLayout):
                 n._y += max(-limit, min(self.force * n.force.y, limit))
             n.force.x = 0
             n.force.y = 0
-            
+
     def copy(self, graph):
         g = GraphSpringLayout(graph)
         g.k, g.force, g.repulsion = self.k, self.force, self.repulsion
@@ -1575,7 +1575,7 @@ def depth_first_search(node, visit=lambda node: False, traversable=lambda node, 
         if not n.id in _visited:
             stop = depth_first_search(n, visit, traversable, _visited)
     return stop
-    
+
 dfs = depth_first_search;
 
 def breadth_first_search(node, visit=lambda node: False, traversable=lambda node, edge: True):
@@ -1591,7 +1591,7 @@ def breadth_first_search(node, visit=lambda node: False, traversable=lambda node
             q.extend((n for n in node.links if traversable(node, node.links.edge(n)) is not False))
             _visited[node.id] = True
     return False
-        
+
 bfs = breadth_first_search;
 
 def paths(graph, id1, id2, length=4, path=[], _root=True):
@@ -1609,7 +1609,7 @@ def paths(graph, id1, id2, length=4, path=[], _root=True):
     p = []
     s = set(path) # 5% speedup.
     for node in graph[id1].links:
-        if node.id not in s: 
+        if node.id not in s:
             p.extend(paths(graph, node.id, id2, length, path, False))
     return _root and sorted(p, key=len) or p
 
@@ -1620,7 +1620,7 @@ def edges(path):
     # For example, the distance (i.e., edge weight sum) of a path:
     # sum(e.weight for e in edges(path))
     return len(path) > 1 and (n.links.edge(path[i+1]) for i,n in enumerate(path[:-1])) or iter(())
-    
+
 #--- GRAPH THEORY ------------------------------------------------------------------------------------
 
 def adjacency(graph, directed=False, reversed=False, stochastic=False, heuristic=None):
@@ -1645,12 +1645,12 @@ def adjacency(graph, directed=False, reversed=False, stochastic=False, heuristic
         map[id1][id2] = 1.0 - 0.5 * e.weight
         if heuristic:
             map[id1][id2] += heuristic(id1, id2)
-        if not directed: 
+        if not directed:
             map[id2][id1] = map[id1][id2]
     if stochastic:
         for id1 in map:
             n = sum(map[id1].values())
-            for id2 in map[id1]: 
+            for id2 in map[id1]:
                 map[id1][id2] /= n
     # Cache the adjacency map: this makes dijkstra_shortest_path() 2x faster in repeated use.
     graph._adjacency = (map, directed, reversed, stochastic, heuristic and id(heuristic))
@@ -1692,8 +1692,8 @@ def dijkstra_shortest_paths(graph, id, heuristic=None, directed=False):
     Q = [] # Use Q as a heap with (distance, node id)-tuples.
     D = {} # Dictionary of final distances.
     P = {} # Dictionary of paths.
-    P[id] = [id] 
-    seen = {id: 0} 
+    P[id] = [id]
+    seen = {id: 0}
     heappush(Q, (0, id))
     while Q:
         (dist, v) = heappop(Q)
@@ -1774,37 +1774,37 @@ def brandes_betweenness_centrality(graph, normalized=True, directed=False):
         D = {} # Dictionary of final distances.
         P = {} # Dictionary of paths.
         for n in graph: P[n]=[]
-        seen = {id: 0} 
+        seen = {id: 0}
         heappush(Q, (0, id, id))
         S = []
         E = dict.fromkeys(graph, 0) # sigma
         E[id] = 1.0
-        while Q:    
-            (dist, pred, v) = heappop(Q) 
-            if v in D: 
+        while Q:
+            (dist, pred, v) = heappop(Q)
+            if v in D:
                 continue
             D[v] = dist
             S.append(v)
             E[v] += E[pred]
             for w in W[v]:
                 vw_dist = D[v] + W[v][w]
-                if w not in D and (w not in seen or vw_dist < seen[w]): 
-                    seen[w] = vw_dist 
+                if w not in D and (w not in seen or vw_dist < seen[w]):
+                    seen[w] = vw_dist
                     heappush(Q, (vw_dist, v, w))
                     P[w] = [v]
                     E[w] = 0.0
                 elif vw_dist == seen[w]: # Handle equal paths.
                     P[w].append(v)
-                    E[w] += E[v] 
-        d = dict.fromkeys(graph, 0.0)  
+                    E[w] += E[v]
+        d = dict.fromkeys(graph, 0.0)
         for w in reversed(S):
             for v in P[w]:
                 d[v] += (1.0 + d[w]) * E[v] / E[w]
-            if w != id: 
+            if w != id:
                 b[w] += d[w]
     # Normalize between 0.0 and 1.0.
     m = normalized and max(b.values()) or 1
-    b = dict((id, w/m) for id, w in b.iteritems())
+    b = dict((id, w/m) for id, w in b.items())
     return b
 
 def eigenvector_centrality(graph, normalized=True, reversed=True, rating={}, iterations=100, tolerance=0.0001):
@@ -1819,7 +1819,7 @@ def eigenvector_centrality(graph, normalized=True, reversed=True, rating={}, ite
     # Note: much faster than betweenness centrality (which grows exponentially).
     def normalize(vector):
         w = 1.0 / (sum(vector.values()) or 1)
-        for node in vector: 
+        for node in vector:
             vector[node] *= w
         return vector
     G = adjacency(graph, directed=True, reversed=reversed)
@@ -1828,7 +1828,7 @@ def eigenvector_centrality(graph, normalized=True, reversed=True, rating={}, ite
     # It has no guarantee of convergence.
     for i in range(iterations):
         v0 = v
-        v  = dict.fromkeys(v0.iterkeys(), 0)
+        v  = dict.fromkeys(v0.keys(), 0)
         for n1 in v:
             for n2 in G[n1]:
                 v[n1] += 0.01 + v0[n2] * G[n1][n2] * rating.get(n1, 1)
@@ -1837,12 +1837,12 @@ def eigenvector_centrality(graph, normalized=True, reversed=True, rating={}, ite
         if e < len(G) * tolerance:
             # Normalize between 0.0 and 1.0.
             m = normalized and max(v.values()) or 1
-            v = dict((id, w/m) for id, w in v.iteritems())
+            v = dict((id, w/m) for id, w in v.items())
             return v
     warn("node weight is 0 because eigenvector_centrality() did not converge.", Warning)
     return dict((n, 0) for n in G)
 
-# a | b => all elements from a and all the elements from b. 
+# a | b => all elements from a and all the elements from b.
 # a & b => elements that appear in a as well as in b.
 # a - b => elements that appear in a but not in b.
 def union(a, b):
@@ -1879,7 +1879,7 @@ def is_clique(graph):
     #        if n1 != n2 and graph.edge(n1.id, n2.id) is None:
     #            return False
     return graph.density == 1.0
-    
+
 def clique(graph, id):
     """ Returns the largest possible clique for the node with given id.
     """
@@ -1893,14 +1893,14 @@ def clique(graph, id):
         except StopIteration:
             a.append(n.id)
     return a
-    
+
 def cliques(graph, threshold=3):
     """ Returns all cliques in the graph with at least the given number of nodes.
     """
     a = []
     for n in graph.nodes:
         c = clique(graph, n.id)
-        if len(c) >= threshold: 
+        if len(c) >= threshold:
             c.sort()
             if c not in a: a.append(c)
     return a
@@ -1937,9 +1937,9 @@ def redirect(graph, node1, node2):
     for e in graph.edges:
         if node1 in (e.node1, e.node2):
             if e.node1 == node1 and e.node2 != node2:
-                graph._add_edge_copy(e, node1=node2, node2=e.node2) 
-            if e.node2 == node1 and e.node1 != node2: 
-                graph._add_edge_copy(e, node1=e.node1, node2=node2) 
+                graph._add_edge_copy(e, node1=node2, node2=e.node2)
+            if e.node2 == node1 and e.node1 != node2:
+                graph._add_edge_copy(e, node1=e.node1, node2=node2)
     unlink(graph, node1)
 
 def cut(graph, node):
@@ -1951,10 +1951,10 @@ def cut(graph, node):
     for e in graph.edges:
         if node in (e.node1, e.node2):
             for n in node.links:
-                if e.node1 == node and e.node2 != n: 
-                    graph._add_edge_copy(e, node1=n, node2=e.node2) 
-                if e.node2 == node and e.node1 != n: 
-                    graph._add_edge_copy(e, node1=e.node1, node2=n) 
+                if e.node1 == node and e.node2 != n:
+                    graph._add_edge_copy(e, node1=n, node2=e.node2)
+                if e.node2 == node and e.node1 != n:
+                    graph._add_edge_copy(e, node1=e.node1, node2=n)
     unlink(graph, node)
 
 def insert(graph, node, a, b):
@@ -1963,15 +1963,15 @@ def insert(graph, node, a, b):
     """
     if not isinstance(node, Node):
         node = graph[node]
-    if not isinstance(a, Node): 
+    if not isinstance(a, Node):
         a = graph[a]
-    if not isinstance(b, Node): 
+    if not isinstance(b, Node):
         b = graph[b]
     for e in graph.edges:
-        if e.node1 == a and e.node2 == b: 
-            graph._add_edge_copy(e, node1=a, node2=node) 
-            graph._add_edge_copy(e, node1=node, node2=b) 
-        if e.node1 == b and e.node2 == a: 
-            graph._add_edge_copy(e, node1=b, node2=node) 
-            graph._add_edge_copy(e, node1=node, node2=a) 
+        if e.node1 == a and e.node2 == b:
+            graph._add_edge_copy(e, node1=a, node2=node)
+            graph._add_edge_copy(e, node1=node, node2=b)
+        if e.node1 == b and e.node2 == a:
+            graph._add_edge_copy(e, node1=b, node2=node)
+            graph._add_edge_copy(e, node1=node, node2=a)
     unlink(graph, a, b)
