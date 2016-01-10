@@ -6,7 +6,7 @@ This is a python 3 port of the wonderful nodebox opengl project! This needs pygl
 
 This is tested with python 3.5.1.
 
-The core drawing libraries are ported and work almost perfectly. The image filters, sound and gui stuff are not working yet.
+The core drawing libraries are ported and work almost perfectly. Some specific examples are not working, they're listed below.
 
 Nodebox for OpenGL was created by Frederik De Bleser and Tom De Smedt!
 
