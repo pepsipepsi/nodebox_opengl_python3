@@ -1,5 +1,7 @@
-fix maps needing to be converted to lists so len attribute can be calculated
+fix issue with textpaths not returning the right points
 
-swap psyco compiler for something else so "render" method will work
+fix "decode" method call in "07-graph" example 
 
 change lambda expressions in gui controls.py file to avoid tuple unpacking
+
+play with sound stuff, it may not actually be broken

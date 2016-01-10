@@ -1,8 +1,11 @@
 import os, sys
+
 sys.path.insert(0, os.path.join("..",".."))
 
 from nodebox.graphics.context import *
 from nodebox.graphics import *
+
+from nodebox.graphics.shader import render, blur
 
 # render invokes psyco, and old compiler I'll need to replace here
 

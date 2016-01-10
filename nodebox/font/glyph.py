@@ -79,16 +79,25 @@ for fontname in fonts:
                     pt = [commands[pt.cmd]]
                 glyphs[fontname][fontweight][ch].append(pt)
 
-import cPickle
-f = open("glyph.p","w")
-cPickle.dump(glyphs, f)
-f.close()
+import pickle
+# f = open("glyph.p","w")
+# pickle.dump(glyphs, f)
+# f.close()
+
+with open('glyph.p', 'w') as f:
+    # Pickle the 'data' dictionary using the highest protocol available.
+    pickle.dump(glyphs, f, pickle.HIGHEST_PROTOCOL)
 
 #=====================================================================================================
 # For testing purposes:
 
 def textpath_from_glyphs(string, x=0, y=0, fontname="Droid Sans", fontweight="normal"):
-    glyphs = cPickle.load(open("glyph.p"))
+    #glyphs = cPickle.load(open("glyph.p"))
+    with open("glyphs.p", 'rb') as f:
+        # The protocol version used is detected automatically, so we do not
+        # have to specify it.
+        glyphs = pickle.load(f)
+
     p = _ctx.BezierPath()
     f = _ctx.fontsize() / 1000.0 * 72 / dpi
     y += textheight(" ", lineheight()) - textheight(" ", lineheight=1)

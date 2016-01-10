@@ -13,7 +13,7 @@ from pyglet.text.layout import IncrementalTextLayout
 from pyglet.text.caret  import Caret
 
 from nodebox.graphics.geometry import angle, distance, clamp, Bounds, INFINITE
-from nodebox.graphics import \
+from nodebox.graphics.context import \
     Layer, Color, Image, image, crop, rect, \
     Text, font, NORMAL, BOLD, CENTER, DEFAULT_FONT, install_font, \
     translate, rotate, \

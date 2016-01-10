@@ -1,1 +1,1 @@
-from gui.controls import *
+from nodebox.gui.controls import *

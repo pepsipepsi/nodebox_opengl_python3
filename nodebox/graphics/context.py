@@ -1127,14 +1127,14 @@ class BezierPath(list):
     def length(self, precision=10):
         """ Returns an approximation of the total length of the path.
         """
-        return graphics.bezier.length(self, segmented=False, n=precision)
+        return nodebox.graphics.bezier.length(self, segmented=False, n=precision)
     
     @property
     def contours(self):
         """ Returns a list of contours (i.e. segments separated by a MOVETO) in the path.
             Each contour is a BezierPath object.
         """
-        return graphics.bezier.contours(self)
+        return nodebox.graphics.bezier.contours(self)
 
     @property
     def bounds(self, precision=100):
@@ -2431,7 +2431,12 @@ try:
     # Load cached font glyph path information from nodebox/font/glyph.p.
     # By default, it has glyph path info for Droid Sans, Droid Sans Mono, Droid Serif.
     glyphs = path.join(path.dirname(__file__), "..", "font", "glyph.p")
-    glyphs = pickle.load(open(glyphs))
+
+    with open(glyphs, 'rb') as f:
+        # The protocol version used is detected automatically, so we do not
+        # have to specify it.
+        glyphs = pickle.load(f)
+
 except:
     pass
 
@@ -2446,6 +2451,7 @@ def textpath(string, x=0, y=0, **kwargs):
     w = bold and italic and "bold italic" or bold and "bold" or italic and "italic" or "normal"
     p = BezierPath()
     f = fontsize / 1000.0
+
     for ch in string:
         try: glyph = glyphs[fontname][w][ch]
         except:

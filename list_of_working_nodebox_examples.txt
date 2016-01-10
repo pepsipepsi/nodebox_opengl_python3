@@ -7,12 +7,11 @@
 04_text
 	all working
 05_path
-	04-text
 	05-spider
 06_math
-	none working
+	all working
 07_filter
-	05-render
+	all working
 08_physics
 	04_animation
 	07_graph

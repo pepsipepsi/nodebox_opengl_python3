@@ -95,6 +95,7 @@
 	canvas.clear()  
 	canvas.frame  
 	canvas.fps  
+	canvas.fullscreen  
 	canvas.mouse.x  
 	canvas.mouse.y  
 	canvas.mouse.dx  

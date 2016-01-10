@@ -1,12 +1,12 @@
 import os, sys
+
 sys.path.insert(0, os.path.join("..",".."))
 
 from nodebox.graphics.context import *
 from nodebox.graphics import *
 
-from graphics.physics import Particle, Force, System
-
-# calls render which invokes psyco, I'll need to do something about that
+from nodebox.graphics.physics import Particle, Force, System
+from nodebox.graphics.shader import render
 
 # This example demonstrates the Animation object,
 # which can be used to store and replay a sequence of image frames.

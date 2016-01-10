@@ -1,4 +1,7 @@
 import os, sys
+
+from nodebox.graphics.shader import render
+
 sys.path.insert(0, os.path.join("..",".."))
 
 from nodebox.graphics.context import *
