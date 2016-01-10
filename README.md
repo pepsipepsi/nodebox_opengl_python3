@@ -18,6 +18,7 @@ all working
 02_transform  
 03_image  
 04_text  
+06_math  
 09_layer  
 Animation  
 Grid  
@@ -33,7 +34,6 @@ Text
 
 none working
 
-06_math  
 10_gui  
 11_sound  
 Advanced  
