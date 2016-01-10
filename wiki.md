@@ -22,7 +22,7 @@ strokewidth()
 
 translate(distance right, distance up)  
 rotate()
-	positive clockwise
+	positive clockwise  
 scale()
 	0 - 1 decimal shrink
 	> 1 grow
