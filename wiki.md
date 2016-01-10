@@ -5,7 +5,7 @@ coordinates 0, 0 are in lower left corner of window
 line(begin x, begin y, end x, end y)
 rect(lower left x, lower left y, width, height)
 ellipse(center x, center y, width, height)
-triangle(point 1 x, point 1 y, point 2 x, point 2 y, point 3 x, point 3 y,)
+triangle(point 1 x, point 1 y, point 2 x, point 2 y, point 3 x, point 3 y)
 
 # color commands
 
@@ -20,7 +20,7 @@ strokewidth()
 
 # transform commands
 
-translate(distance right, distance up)
+translate(distance right, distance up)  
 rotate()
 	positive clockwise
 scale()
