@@ -7,8 +7,6 @@ from nodebox.graphics import *
 from nodebox.graphics.geometry import coordinates
 from nodebox.gui.controls import Slider
 
-# all of these controls ones are broken because of a lambda expression that needs to be changed to avoid tuple unpacking
-
 # The nodebox.gui module provides simple visual controls, such as Slider, Button, CheckBox and Field.
 # Each control inherits from a Control class, which in turn inherits from Layer.
 # This means that to display a control, we append it to the canvas just like a layer,

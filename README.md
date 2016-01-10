@@ -20,6 +20,7 @@ all working
 04_text  
 06_math  
 09_layer  
+10_gui  
 Animation  
 Grid  
 Math  
@@ -34,7 +35,6 @@ Text
 
 none working
 
-10_gui  
 11_sound  
 Advanced  
 Content  

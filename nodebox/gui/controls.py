@@ -671,8 +671,8 @@ class Editable(Control):
             self._editor.set_selection(i, i+1)
         if i == len(self.value) and self.value != "" and delimiter(self.value[i-1]):
             self._editor.set_selection(i-1, i)
-        a = _find(lambda (i,ch): delimiter(ch), enumerate(reversed(self.value[:i])))
-        b = _find(lambda (i,ch): delimiter(ch), enumerate(self.value[i:]))
+        a = _find(lambda i_ch: delimiter(i_ch[1]), list(reversed(self.value[:i])))
+        b = _find(lambda i_ch: delimiter(i_ch[1]), list(self.value[i:]))
         a = a and i-a[0] or 0
         b = b and i+b[0] or len(self.value)
         self._editor.set_selection(a, b)
@@ -1133,7 +1133,7 @@ class Labeled(Layout):
         Layout.insert(self, i, self.captions[i])
         
     def append(self, control, caption=""):
-        self.insert(len(self)/2, control, caption)
+        self.insert(int(len(self)/2), control, caption)
     def extend(self, controls):
         for control in controls:
             caption, control = isinstance(control, tuple) and control or ("", control)
@@ -1174,7 +1174,8 @@ class Rows(Labeled):
         w2 = min(w2, mw)
         dx = 0
         dy = 0
-        for caption, control in reversed(zip(self.captions, self.controls)):
+
+        for caption, control in reversed(list(zip(self.captions, self.controls))):
             if isinstance(control, Layout) and control.height > caption.height * 2:
                 caption.y = dy + control.height - caption.height     # valign top.
             if isinstance(control, (Label, Button, Slider, Field)):
