@@ -34,7 +34,7 @@ def draw(canvas):
         )
         endclip()
         
-        # For a sublte finishing touch,
+        # For a subtle finishing touch,
         # we could also add the leaf stroke back on top:
         drawpath(leaf, stroke=(0,0,0,0.25), strokewidth=1, fill=None)
 	

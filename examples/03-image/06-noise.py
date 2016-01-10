@@ -34,6 +34,7 @@ for i in range(p.width):
 p.update()
 
 def draw(canvas):
+    canvas.clear()
     image(p, 150, 150)
     
 canvas.size = 500, 500

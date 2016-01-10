@@ -29,14 +29,15 @@ def draw(canvas):
 
     # For each frame, set the background color to a darkish blue.
     background(0.0, 0.0, 0.2)
+    x, y = canvas.mouse.xy
 
     # Only draw a new point if the mouse has moved, which means the current mouse 
     # position is different from the previous one.
     # You can append "and mousedown" to the if statement to only draw points when
     # you hold down the mouse button. If you do, try clicking to get lines.
-    if canvas.mouse.x != px and canvas.mouse.y != py:
-        pointlist.append(Point(canvas.mouse.x, canvas.mouse.y))
-        px, py = canvas.mouse.x, canvas.mouse.y
+    if x != px and y != py:
+        pointlist.append(Point(x, y))
+        px, py = x, y
 
     print("pointlist : ", pointlist)
     # Set the correct color, a light blue.
