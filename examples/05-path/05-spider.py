@@ -1,8 +1,8 @@
 import os, sys
 
-from nodebox.graphics.shader import render
-
 sys.path.insert(0, os.path.join("..",".."))
+
+from nodebox.graphics.shader import render
 
 from nodebox.graphics.context import *
 from nodebox.graphics import *
@@ -42,8 +42,6 @@ def spider(string, x=0, y=0, radius=25, **kwargs):
 # Rendering the image beforehand is much faster than calling spider() every frame.
 stroke(0.1, 0.1, 0, 0.5)
 strokewidth(1)
-
-# can't do render because it will invoke psyco, some kind of old compiler
 
 img = render(spider, 500, 150, 
     string = "SPIDER",     

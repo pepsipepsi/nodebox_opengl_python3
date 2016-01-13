@@ -1,41 +1,50 @@
-# nodebox_opengl_python3
+# nodebox_opengl_python3  
 
-creative coding in pure python... 
+creative coding in pure python... created by Frederik De Bleser and Tom De Smedt.  
 
-This is a python 3 port of the wonderful nodebox opengl project! This needs pyglet and python-future to run and includes examples from nodebox for opengl and the original nodebox 1.
+This is a python 3 port of nodebox opengl! This needs pyglet to run and includes examples from nodebox for opengl and the original nodebox 1.  
 
-This is tested with python 3.5.1.
+If you have pip installed on your system path, or if not find it in your scripts directory and type  
 
-The core drawing libraries are ported and work almost perfectly. Some specific examples are not working, they're listed below.
+	pip install pyglet  
 
-Nodebox for OpenGL was created by Frederik De Bleser and Tom De Smedt!
+... and you should be good to go.  
 
-what's working (non numbered are the Nodebox 1 examples)
+This is tested with python 3.5.1 and works well. Some of the original nodebox 1 examples don't run, but all of the nodebox open gl examples do (they are the ones which are numbered).  
 
-all working
+what's working (non numbered are the Nodebox 1 examples)  
+
+nodebox for opengl  
+
+all working  
 
 01_basics  
 02_transform  
 03_image  
 04_text  
+05_path  
 06_math  
-09_layer  
 07_filter  
 08_physics  
+09_layer  
 10_gui  
+11_sound(untested)  
+
+nodebox 1  
+
+all working  
+
 Animation  
 Grid  
 Math  
 Primitives  
 
-most working
+most working  
 
-05_path(only spider broken)  
 Text  
 
-none working
+none working  
 
-11_sound  
 Advanced  
 Content  
 Interactivity  

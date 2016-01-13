@@ -34,8 +34,6 @@ from hashlib       import md5
 from types         import FunctionType
 from types         import MethodType
 from datetime      import datetime
-from past.builtins import basestring
-
 
 #import bezier
 # Do this at the end, when we have defined BezierPath, which is needed in the bezier module.
@@ -1466,10 +1464,10 @@ def texture(img, data=None):
         When a Image or Pixels object is given, returns the associated texture.
     """
     # Image texture stored in cache, referenced by file path (or a custom id defined with cache()).
-    if isinstance(img, (basestring, int)) and img in _texture_cache:
+    if isinstance(img, (str, int)) and img in _texture_cache:
         return _texture_cache[img]
     # Image file path, load it, cache it, return texture.
-    if isinstance(img, basestring):
+    if isinstance(img, str):
         try: cache(img, pyglet.image.load(img).get_texture())
         except IOError:
             raise Exception("can't load image from %s" % repr(img))

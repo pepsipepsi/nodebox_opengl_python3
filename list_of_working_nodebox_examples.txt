@@ -7,7 +7,7 @@
 04_text
 	all working
 05_path
-	05-spider
+	all working
 06_math
 	all working
 07_filter
@@ -19,7 +19,7 @@
 10_gui
 	all working
 11_sound
-	none working
+	not sure
 12_experimental
 	01-isight
 	03-movie

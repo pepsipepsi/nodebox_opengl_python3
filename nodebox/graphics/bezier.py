@@ -7,7 +7,7 @@
 
 # Thanks to Prof. F. De Smedt at the Vrije Universiteit Brussel.
 
-from nodebox.graphics.context import *
+from nodebox.graphics.context import BezierPath, PathElement, PathError, Point, MOVETO, LINETO, CURVETO, CLOSE
 from math import sqrt, pow
 
 class DynamicPathElement(PathElement):
@@ -22,7 +22,7 @@ def linepoint(t, x0, y0, x1, y1):
     """ Returns coordinates for point at t on the line.
         Calculates the coordinates of x and y for a point at t on a straight line.
         The t parameter is a number between 0.0 and 1.0,
-        x0 and y0 define the starting point of the line, 
+        x0 and y0 define the starting point of the line,
         x1 and y1 the ending point of the line.
     """
     out_x = x0 + t * (x1-x0)
@@ -38,7 +38,7 @@ def linelength(x0, y0, x1, y1):
 
 def curvepoint(t, x0, y0, x1, y1, x2, y2, x3, y3, handles=False):
     """ Returns coordinates for point at t on the spline.
-        Calculates the coordinates of x and y for a point at t on the cubic bezier spline, 
+        Calculates the coordinates of x and y for a point at t on the cubic bezier spline,
         and its control points, based on the de Casteljau interpolation algorithm.
         The t parameter is a number between 0.0 and 1.0,
         x0 and y0 define the starting point of the spline,
@@ -68,9 +68,9 @@ def curvepoint(t, x0, y0, x1, y1, x2, y2, x3, y3, handles=False):
 
 def curvelength(x0, y0, x1, y1, x2, y2, x3, y3, n=20):
     """ Returns the length of the spline.
-        Integrates the estimated length of the cubic bezier spline defined by x0, y0, ... x3, y3, 
+        Integrates the estimated length of the cubic bezier spline defined by x0, y0, ... x3, y3,
         by adding the lengths of linear lines between points at t.
-        The number of points is defined by n 
+        The number of points is defined by n
         (n=10 would add the lengths of lines between 0.0 and 0.1, between 0.1 and 0.2, and so on).
         The default n=20 is fine for most cases, usually resulting in a deviation of less than 0.01.
     """
@@ -120,8 +120,8 @@ def segment_lengths(path, relative=False, n=20):
         length = sum(lengths)
         try:
             # Relative segment lengths' sum is 1.0.
-            return map(lambda l: l / length, lengths)
-        except ZeroDivisionError: 
+            return list(map(lambda l: l / length, lengths))
+        except ZeroDivisionError:
             # If the length is zero, just return zero for all segments
             return [0.0] * len(lengths)
     else:
@@ -149,34 +149,33 @@ def _locate(path, t, segments=None):
         The returned t is the absolute time on that segment,
         in contrast to the relative t on the whole of the path.
         The returned point is the last MOVETO, any subsequent CLOSETO after i closes to that point.
-        When you supply the list of segment lengths yourself, as returned from length(path, segmented=True), 
-        point() works about thirty times faster in a for-loop since it doesn't need to recalculate 
-        the length during each iteration. 
+        When you supply the list of segment lengths yourself, as returned from length(path, segmented=True),
+        point() works about thirty times faster in a for-loop since it doesn't need to recalculate
+        the length during each iteration.
     """
-    data = [1.0]
     if segments == None:
-        segments = segment_lengths(path, relative=True) 
-    if len(data) == 0:
+        segments = segment_lengths(path, relative=True)
+    if len(segments) == 0:
         raise Exception("The given path is empty")
     for i, el in enumerate(path):
         if i == 0 or el.cmd == MOVETO:
             closeto = Point(el.x, el.y)
-        if t <= data[i] or i == len(data)-1:
+        if t <= segments[i] or i == len(segments)-1:
             break
-        else: 
-            t -= data[i]
-    try: t /= data[i]
-    except ZeroDivisionError: 
+        else:
+            t -= segments[i]
+    try: t /= segments[i]
+    except ZeroDivisionError:
         pass
-    if i == len(data)-1 and data[i] == 0: i -= 1
+    if i == len(segments)-1 and segments[i] == 0: i -= 1
     return (i, t, closeto)
 
 def point(path, t, segments=None):
     """ Returns coordinates for point at t on the path.
         Gets the length of the path, based on the length of each curve and line in the path.
         Determines in what segment t falls. Gets the point on that segment.
-        When you supply the list of segment lengths yourself, as returned from length(path, segmented=True), 
-        point() works about thirty times faster in a for-loop since it doesn't need to recalculate 
+        When you supply the list of segment lengths yourself, as returned from length(path, segmented=True),
+        point() works about thirty times faster in a for-loop since it doesn't need to recalculate
         the length during each iteration.
     """
     if len(path) == 0:
@@ -184,6 +183,7 @@ def point(path, t, segments=None):
     i, t, closeto = _locate(path, t, segments=segments)
     x0, y0 = path[i].x, path[i].y
     p1 = path[i+1]
+
     if p1.cmd == CLOSE:
         x, y = linepoint(t, x0, y0, closeto.x, closeto.y)
         return DynamicPathElement(LINETO, ((x, y),))
@@ -198,9 +198,9 @@ def point(path, t, segments=None):
         x3, y3, x1, y1, x2, y2 = p1.x, p1.y, p1.ctrl1.x, p1.ctrl1.y, p1.ctrl2.x, p1.ctrl2.y
         x, y, c1x, c1y, c2x, c2y = curvepoint(t, x0, y0, x1, y1, x2, y2, x3, y3)
         return DynamicPathElement(CURVETO, ((c1x, c1y), (c2x, c2y), (x, y)))
-    # else:
-    #     raise Exception("Unknown cmd '%s' for p1 %s" % (p1.cmd, p1))
-        
+    else:
+        raise Exception("Unknown cmd '%s' for p1 %s" % (p1.cmd, p1))
+
 def points(path, amount=100, start=0.0, end=1.0, segments=None):
     """ Returns an iterator with a list of calculated points for the path.
         To omit the last point on closed paths: end=1-1.0/amount
@@ -209,7 +209,7 @@ def points(path, amount=100, start=0.0, end=1.0, segments=None):
         raise Exception("The given path is empty")
     n = end - start
     d = n
-    if amount > 1: 
+    if amount > 1:
         # The delta value is divided by amount-1, because we also want the last point (t=1.0)
         # If we don't use amount-1, we fall one point short of the end.
         # If amount=4, we want the point at t 0.0, 0.33, 0.66 and 1.0.
@@ -255,15 +255,14 @@ def findpath(points, curvature=1.0):
         from straight angles to smooth curves.
         Curvature is only useful if the path has more than three points.
     """
-    
+
     # The list of points consists of Point objects,
     # but it shouldn't crash on something straightforward
     # as someone supplying a list of (x,y)-tuples.
-    # from types import tuple
     for i, pt in enumerate(points):
         if type(pt) == tuple:
             points[i] = Point(pt[0], pt[1])
-    
+
     # No points: return nothing.
     if len(points) == 0: return None
     # One point: return a path with a single MOVETO-point.
@@ -282,13 +281,13 @@ def findpath(points, curvature=1.0):
     if curvature == 0:
         path = BezierPath(None)
         path.moveto(points[0].x, points[0].y)
-        for i in range(len(points)): 
+        for i in range(len(points)):
             path.lineto(points[i].x, points[i].y)
         return path
-    
+
     # Construct the path with curves.
     curvature = 4 + (1.0-curvature)*40
-    
+
     # The first point's ctrl1 and ctrl2 and last point's ctrl2
     # will be the same as that point's location;
     # we cannot infer how the path curvature started or will continue.
@@ -301,7 +300,7 @@ def findpath(points, curvature=1.0):
         bi[i] = -1 / (curvature + bi[i-1])
         ax[i] = -(points[i+1].x-points[i-1].x-ax[i-1]) * bi[i]
         ay[i] = -(points[i+1].y-points[i-1].y-ay[i-1]) * bi[i]
-        
+
     r = range(1, len(points)-1)
     r.reverse()
     for i in r:
@@ -311,13 +310,13 @@ def findpath(points, curvature=1.0):
     path = BezierPath(None)
     path.moveto(points[0].x, points[0].y)
     for i in range(len(points)-1):
-        path.curveto(points[i].x + dx[i], 
+        path.curveto(points[i].x + dx[i],
                      points[i].y + dy[i],
-                     points[i+1].x - dx[i+1], 
+                     points[i+1].x - dx[i+1],
                      points[i+1].y - dy[i+1],
                      points[i+1].x,
                      points[i+1].y)
-    
+
     return path
 
 #--- BEZIER PATH INSERT POINT ------------------------------------------------------------------------
@@ -325,14 +324,14 @@ def findpath(points, curvature=1.0):
 def insert_point(path, t):
     """ Inserts an extra point at t.
     """
-    
+
     # Find the points before and after t on the path.
     i, t, closeto = _locate(path, t)
     x0 = path[i].x
     y0 = path[i].y
     p1 = path[i+1]
     p1cmd, x3, y3, x1, y1, x2, y2 = p1.cmd, p1.x, p1.y, p1.ctrl1.x, p1.ctrl1.y, p1.ctrl2.x, p1.ctrl2.y
-    
+
     # Construct the new point at t.
     if p1cmd == CLOSE:
         pt_cmd = LINETO

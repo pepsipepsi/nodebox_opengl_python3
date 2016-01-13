@@ -3,12 +3,13 @@ sys.path.insert(0, os.path.join("..",".."))
 
 from nodebox.graphics.context import *
 from nodebox.graphics import *
-    # NodeBox allows you to query the current state of the canvas, and even
-    # the contents of it as an image. This allows for some nice feed-back effects.
 
-    # Currently, we use a background, so all content gets replaced.
-    # Enabling the next line to get a transparent background.
-    # background(None)
+# NodeBox allows you to query the current state of the canvas, and even
+# the contents of it as an image. This allows for some nice feed-back effects.
+
+# Currently, we use a background, so all content gets replaced.
+# Enabling the next line to get a transparent background.
+# background(None)
 
 def draw(canvas):
     # Draw some ovals on screen, just to get something to display.

@@ -10,27 +10,28 @@ from nodebox.graphics import *
 # you stick with the default fonts (Droid Sans, Droid Sans Mono, Droid Serif).
 # Note: there is a way to make more fonts available - see nodebox/font/glyph.py,
 # relying on the classic NodeBox to do the calculations.
-myPath = textpath("GROW", x=40, y=200, fontname="Arial", fontsize=100, bold=True)
-myPath2 = textpath("GROW", x=40, y=200, fontname="Arial", fontsize=100, bold=True)
-
-# in python 2 it's necessary to convert this set to a list in order to iterate over it, not in python 3. You can just iterate over the set
+myPath = textpath("VAPORIZE", x=40, y=200, fontname="Arial", fontsize=80, bold=True)
 
 # Now that we have a BezierPath from the text we can use all sorts of math on it.
 # Calculate a list of points (PathElement objects), evenly distributed along the path:
 
-def draw(canvas):
-    #canvas.clear()
-    fill(0.2, 0.5, 0, 1)
-    drawpath(myPath2)
+myPoints = list(myPath.points(1000))
+n = 0
 
-    for pt in myPath:
-        ellipse(pt.x, pt.y, 2, 2)
+def draw(canvas):
+    canvas.clear()
+    fill(0.8, 0.0, 0.8, 1)
+
+    for pt in myPoints:
+        ellipse(pt.x, pt.y, 3, 3)
         # Each frame, adjust the position of the point a little bit.
         # Since we are not clearing the background,
         # it will appear as if something is growing from the text.
 
-        pt.x += random(-1.0, 1.0)
-        pt.y += random(-1.0, 1.0)
+        # changed it to vaporize because not clearing the canvas makes it flash
+
+        pt.x += random(-2.0, 2.0)
+        pt.y += random(-2.0, 2.0)
 
 canvas.fps  = 20
 canvas.size = 500, 500

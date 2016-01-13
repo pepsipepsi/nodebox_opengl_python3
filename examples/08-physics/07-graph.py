@@ -6,8 +6,6 @@ from nodebox.graphics import *
 
 from nodebox.graphics.physics import Node, Edge, Graph
 
-# broken currently - AttributeError: 'str' object has no attribute 'decode'
-
 # Create a graph with randomly connected nodes.
 # Nodes and edges can be styled with fill, stroke, strokewidth parameters.
 # Each node displays its id as a text label, stored as a Text object in Node.text.
