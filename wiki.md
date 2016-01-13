@@ -35,7 +35,11 @@ note: coordinates 0, 0 are in lower left corner of window
 	fill(black, alpha)  
 	stroke(red, green, blue, alpha)  
 
+optional colorspace parameter to switch to Hue, Saturation, Brightness mode  
+
+	stroke(red, green, blue, alpha, colorspace=HSB)  
 	strokewidth()  
+
 int value 1 - 5
 
 # Primitives  
