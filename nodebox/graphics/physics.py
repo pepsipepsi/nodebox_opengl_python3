@@ -12,7 +12,6 @@ from math          import sin, cos, atan2, degrees, radians, pi
 from random        import random
 from heapq         import heappush, heappop
 from warnings      import warn
-from past.builtins import basestring
 
 # float("inf") doesn't work on windows.
 INFINITE = 1e20
@@ -952,7 +951,7 @@ def deepcopy(o):
         return o
     if hasattr(o, "copy"):
         return o.copy()
-    if isinstance(o, (basestring, bool, int, float, complex)):
+    if isinstance(o, (str, bool, int, float, complex)):
         return o
     if isinstance(o, (list, tuple, set)):
         return o.__class__(deepcopy(v) for v in o)
